@@ -4,10 +4,10 @@
 <head>
   <title>script.aculo.us functional tests</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  
-  <style type="text/css" media="screen">  
+
+  <style type="text/css" media="screen">
     @import url("css/test.css");
-    
+
     #test-element {
       position: relative;
     }
@@ -21,7 +21,7 @@
 
 <body>
   <h1>Tests for Rotate Manipulations</h1>
-  
+
   <div class="howto">
     <img src="images/manipulations_rotate.jpg" alt="Rotate works with two fingers and making a rotation movement or dragging with the mouse while holding down the shift key." />
   </div>
@@ -34,16 +34,16 @@
       <li>Text selection on other elements <strong>should</strong> be possible</li>
     </ul>
   </div>
-  
+
   <div id="test-element" class="test-element"></div>
-  
+
   <script type="text/javascript">
     S2.enableMultitouchSupport = true;
-    
+
     $('test-element').observe('manipulate:update', function(event) {
       event.element().transform({rotation: event.memo.rotation});
     });
   </script>
-  
+
 </body>
 </html>

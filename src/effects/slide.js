@@ -1,6 +1,6 @@
 /**
  *  class S2.FX.SlideDown < S2.FX.Element
- *  
+ *
  *  Effect to hide an element by animating its CSS `height`, `padding-top`,
  *  and `padding-bottom` from their ordinary values to zero.
 **/
@@ -22,15 +22,15 @@ S2.FX.SlideDown = Class.create(S2.FX.Element, {
       paddingBottom:  '0',
       overflow:       'hidden'
     }).show();
-    
+
     this.animate('style', element, {
       style: style,
       propertyTransitions: {}
     });
   },
-  
+
   teardown: function() {
-    var element = this.destinationElement || this.element;    
+    var element = this.destinationElement || this.element;
     element.setStyle({
       height:         '',
       paddingTop:     '',
@@ -52,15 +52,15 @@ S2.FX.SlideUp = Class.create(S2.FX.Morph, {
     };
 
     element.setStyle({ overflow: 'hidden' });
-    
+
     this.animate('style', element, {
       style: style,
       propertyTransitions: {}
     });
   },
-  
+
   teardown: function() {
-    var element = this.destinationElement || this.element;    
+    var element = this.destinationElement || this.element;
     element.setStyle({
       height:         '',
       paddingTop:     '',

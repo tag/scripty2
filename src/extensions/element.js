@@ -5,7 +5,7 @@
 **/
 Element.__scrollTo = Element.scrollTo;
 Element.addMethods({
-  /** 
+  /**
    *  Element#scrollTo(@element[, to[, options]]) -> element
    *  - to (Number): vertical scroll position in pixels
    *  - options (Object): effect options
@@ -15,10 +15,10 @@ Element.addMethods({
    *  With just the `@element` parameter given, it will revert to
    *  Prototype's default implementation: the viewport will be scrolled
    *  (without animation) to contain the element.
-   *  
-   *  If given the `to` parameter, the elements contents will be 
+   *
+   *  If given the `to` parameter, the elements contents will be
    *  smoothly scrolled to the specified scrollTop position.
-  **/  
+  **/
   scrollTo: function(element, to, options){
     if(arguments.length == 1) return Element.__scrollTo(element);
     new S2.FX.Scroll(element, Object.extend(options || {}, { to: to })).play();
@@ -27,7 +27,7 @@ Element.addMethods({
 });
 
 Element.addMethods({
-  /** 
+  /**
    *  Element.effect(@element, effect[, options]) -> element
    *
    *  Initialize and play the specified effect on the element.
@@ -41,25 +41,25 @@ Element.addMethods({
     return element;
   },
 
-  /** 
+  /**
    *  Element#morph(@element, style[, options]) -> element
    *
    *  Dynamically adjust an element's CSS styles to the CSS properties given
-   *  in the `style` argument. 
-   *  
+   *  in the `style` argument.
+   *
    *  This method is the preferred way to invoke CSS-based effects:
    *
    *      $('element_id').morph('width:500px');
    *      $('element_id').morph('width:500px', 'slow');
    *      $('element_id').morph('width:500px', function(){ alert('finished!'); });
    *      $('element_id').morph('width:500px', 2); // duration 2 seconds
-   *  
+   *
    *  Complex options can be specified with an Object literal:
    *
    *      $('element_id').morph('width:500px;height:500px', {
    *        duration: 4,
    *        transition: 'linear',
-   *        delay: .5, 
+   *        delay: .5,
    *        propertyTransitions: {
    *          width: 'mirror', height: 'easeInOutCirc'
    *        },
@@ -94,16 +94,16 @@ Element.addMethods({
     return element.effect('morph', Object.extend(options, { style: style }));
   }.optionize(),
 
-  /** 
+  /**
    *  Element#appear(@element[, options]) -> element
    *
    *  Make an element appear by fading it in from 0% opacity.
   **/
   appear: function(element, options){
-    return element.setStyle('opacity: 0;').show().morph('opacity: 1', options);    
+    return element.setStyle('opacity: 0;').show().morph('opacity: 1', options);
   },
 
-  /** 
+  /**
    *  Element#fade(@element[, options]) -> element
    *
    *  Fade out an element from its current opacity setting (or 100%).
@@ -115,7 +115,7 @@ Element.addMethods({
     return element.morph('opacity: 0', options);
   },
 
-  /** 
+  /**
    *  Element#cloneWithoutIDs(@element) -> element
    *
    *  Returns a clone of the element with all `id` attributed removed.
@@ -129,7 +129,7 @@ Element.addMethods({
   }
 });
 
-/** 
+/**
  *  Element#transform(@element, transforms) -> element
  *  - transforms (Object): rotation angle and scale factor
  *
@@ -142,7 +142,7 @@ Element.addMethods({
  *
  *      // rotate by 1.5 radians, scale by 200%
  *      $('element_id').transform({ rotation: 1.5, scale: 2 });
- *  
+ *
  *  [[manipulate:update]] event memos can be directly fed into [[Element#transform]]:
  *
  *      $('element_id').observe('manipulate:update', function(event){
@@ -152,11 +152,11 @@ Element.addMethods({
  *  To convert degrees to radians, use:
  *
  *      radians = degrees * (Math.PI/180);
- *  
+ *
 **/
 (function(){
   var transform;
-  
+
   if(window.CSSMatrix) transform = function(element, transform){
     element.style.transform = 'scale('+(transform.scale||1)+') rotate('+(transform.rotation||0)+'rad)';
     return element;
@@ -178,9 +178,9 @@ Element.addMethods({
     element.style.filter = filter;
     element.style.marginLeft = (element._oDims[0]-element.offsetWidth)/2+'px';
     element.style.marginTop = (element._oDims[1]-element.offsetHeight)/2+'px';
-    return element; 
+    return element;
   };
   else transform = function(element){ return element; }
-  
+
   Element.addMethods({ transform: transform });
 })();

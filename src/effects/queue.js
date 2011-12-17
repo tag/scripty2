@@ -1,14 +1,14 @@
 /**
  *  class S2.FX.Queue
  *
- *  Effect queues manage the execution of effects in parallel or 
+ *  Effect queues manage the execution of effects in parallel or
  *  end-to-end over time.
 **/
-S2.FX.Queue = (function(){ 
+S2.FX.Queue = (function(){
   return function() {
     var instance = this;
     var effects = [];
-    
+
     /**
      *  S2.FX.Queue#getEffects() -> Array
      *
@@ -17,7 +17,7 @@ S2.FX.Queue = (function(){
     function getEffects() {
       return effects;
     }
-    
+
     /**
      *  S2.FX.Queue#active() -> Boolean
      *
@@ -26,13 +26,13 @@ S2.FX.Queue = (function(){
     function active() {
       return effects.length > 0;
     }
-    
+
     /**
      *  S2.FX.Queue#add(effect) -> S2.FX.Queue
      *  - effect (S2.FX.Base): Effect to be queued
      *
      *  Add an effect to the queue. The effects' options can optionally
-     *  contain a `position` option that can be either `parallel` 
+     *  contain a `position` option that can be either `parallel`
      *  (the effect will start immediately) or `end` (the effect will start
      *  when the last of the currently-queued effects ends).
      *  Returns the Queue.
@@ -74,7 +74,7 @@ S2.FX.Queue = (function(){
         effect.render(timestamp);
         if (effect.state === 'finished') remove(effect);
       }
-      
+
       return instance;
     }
 
@@ -89,16 +89,16 @@ S2.FX.Queue = (function(){
       } else {
         startsAt = now;
       }
-       
+
       // If the user specified a delay, we convert it to ms and add it to the
-      // `startsAt` time. 
-      var delay = (effect.options.delay || 0) * 1000;      
+      // `startsAt` time.
+      var delay = (effect.options.delay || 0) * 1000;
       effect.startsAt = startsAt + delay;
-      
-      var duration = (effect.options.duration || 1) * 1000;      
+
+      var duration = (effect.options.duration || 1) * 1000;
       effect.endsAt = effect.startsAt + duration;
     }
-    
+
     Object.extend(instance, {
       getEffects: getEffects,
       active: active,

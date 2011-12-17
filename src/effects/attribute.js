@@ -9,7 +9,7 @@ S2.FX.Attribute = Class.create(S2.FX.Base, {
     object = Object.isString(object) ? $(object) : object;
 
     this.method = Object.isFunction(method) ? method.bind(object) :
-      Object.isFunction(object[method]) ? object[method].bind(object) : 
+      Object.isFunction(object[method]) ? object[method].bind(object) :
       function(value) { object[method] = value };
 
     this.to = to;

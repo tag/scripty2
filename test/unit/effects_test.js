@@ -7,7 +7,7 @@ var COMBINED_EFFECTS =
 
 var COMBINED_RJS_EFFECTS = $w('fade appear blind_up blind_down puff switch_off '+
   'drop_out shake slide_up slide_down pulsate squish fold grow shrink');
-   
+
 var tmp, tmp2;
 
 new Test.Unit.Runner({
@@ -17,7 +17,7 @@ new Test.Unit.Runner({
     S2.FX.DefaultOptions.accelerate = false;
     S2.FX.DefaultOptions.engine = 'javascript';
   }},
-  
+
   teardown: function() { with(this) {
     // remove all queued effects
     //Effect.Queue.each(function(e) { e.cancel() });
@@ -29,17 +29,17 @@ new Test.Unit.Runner({
     assertEqual(1, q.getEffects().length);
     wait(500, function(){
       assertEqual(0, q.getEffects().length);
-      
+
       new S2.FX.Morph('sandbox',{ style: 'font-size:20px' }).play();
       new S2.FX.Morph('sandbox',{ style: 'color:#fff' }).play();
       assertEqual(2, q.getEffects().length);
-      
+
       wait(500, function(){
         assertEqual(0, q.getEffects().length);
       });
     });
   }},
-  
+
   testMorphChaining: function() { with(this) {
     $('sandbox').morph('font-size:10px').morph('color:#fff');
     wait(300, function(){
@@ -54,14 +54,14 @@ new Test.Unit.Runner({
       });
     });
   }},
-  
+
   testExceptionOnNonExistingElement: function() { with(this) {
     assertRaise('ElementDoesNotExistError',
       function(){new S2.FX.Morph('nothing-to-see-here',{style:'font-size:50px'})});
   }},
-  
+
   // TODO: add tests for S2.FX.Parallel, incl. callbacks
-  
+
   testCallbacks: function() { with(this) {
     var tmp = 0;
     var e1 = new S2.FX.Morph('sandbox',{style:'',delay:1,duration:0.5,
@@ -78,20 +78,20 @@ new Test.Unit.Runner({
       });
     });
   }},
-  
+
   testAfterEvent: function() { with(this) {
     tmp = 0;
     var i = 6;
     while(i--) $('e'+(i+1)).setStyle('font-size:10px')
       .morph('font-size:12px',{ duration:.05, after:function(){ tmp++ } });
-    
+
     wait(250, function() {
       assertEqual(6, tmp);
-    
+
       tmp = 0;
       $('sandbox').setStyle('font-size:11px');
       $('sandbox').morph('font-size:11px', { after:function(){ tmp++ }, duration: .05 });
-      
+
       // for consistency, the after event should always be called
       // even if there's no animation
       wait(100, function() {
@@ -99,30 +99,30 @@ new Test.Unit.Runner({
       });
     });
   }},
-  
+
   testBeforeEvent: function() { with(this) {
     tmp = 0;
     var i = 6;
     while(i--) $('e'+(i+1)).setStyle('font-size:10px')
       .morph('font-size:12px',{ duration:.05, before:function(){ tmp++ } });
-    
+
     wait(250, function() {
       assertEqual(6, tmp);
-    
+
       tmp = 0;
       $('sandbox').setStyle('font-size:11px');
       $('sandbox').morph('font-size:11px', { before:function(){ tmp++ }, duration: .05 });
-      
+
       // for consistency, the before event should always be called
       // even if there's no animation
       wait(100, function() {
         assertEqual(1, tmp);
-        
+
         // test delayed execution
         tmp = 0;
         $('sandbox').setStyle('font-size:11px');
-        $('sandbox').morph('font-size:12px', { 
-          before:function(){ tmp++ }, duration: .05, delay: .5 
+        $('sandbox').morph('font-size:12px', {
+          before:function(){ tmp++ }, duration: .05, delay: .5
         });
         wait(100, function() {
           assertEqual(0, tmp);
@@ -131,16 +131,16 @@ new Test.Unit.Runner({
           })
         });
       });
-      
-      
+
+
     });
   }},
-  
+
   testTransition: function() { with(this) {
     // false implies linear
     var e = new S2.FX.Morph('sandbox',{transition:false,style:'opacity:0.25',duration:0.5}).play();
     assert(e.options.transition === S2.FX.Transitions.linear);
-    
+
     wait(1000, function() {
       assertEqual(0.25, $('sandbox').getStyle('opacity'));
       // default to sinoidal
@@ -149,7 +149,7 @@ new Test.Unit.Runner({
 
       wait(1000, function() {
         assertEqual(0.25, $('sandbox').getStyle('opacity'));
-        
+
         var transitions = [
           { transition: 'linear',     expected0: 0, expected1: 1 },
           { transition: 'sinusoidal', expected0: 0, expected1: 1 },
@@ -159,25 +159,25 @@ new Test.Unit.Runner({
           { transition: 'none',       expected0: 0, expected1: 0 },
           { transition: 'full',       expected0: 1, expected1: 1 }
         ];
-        
+
         transitions.each(function(t){
           assertEqual(t.expected0, S2.FX.Transitions[t.transition](0), t.transition + '@0');
           assertEqual(t.expected1, S2.FX.Transitions[t.transition](1), t.transition + '@1');
         });
-        
+
         $('sandbox').setStyle('font-size:10px');
         var e = new S2.FX.Morph('sandbox',{style:'font-size:5px',transition:'none'}).play();
         wait(10, function(){
           assertEqual('10px', $('sandbox').getStyle('font-size'));
         });
-        
+
       });
     });
   }},
-  
+
   testReplayability: function() { with(this) {
     var e1 = new S2.FX.Morph('sandbox',{style:'font-size:5px',duration:0.5});
-    
+
     $('sandbox').setStyle('font-size:15px');
     assertEqual('15px', $('sandbox').getStyle('font-size'));
     e1.play();
@@ -193,10 +193,10 @@ new Test.Unit.Runner({
       });
     });
   }},
- 
+
   testReplayabilityWithDifferentOptions: function() { with(this) {
     var e1 = new S2.FX.Morph('sandbox',{style:'font-size:5px',duration:0.5});
-    
+
     $('sandbox').setStyle('font-size:15px');
     assertEqual('15px', $('sandbox').getStyle('font-size'));
     e1.play();
@@ -217,7 +217,7 @@ new Test.Unit.Runner({
       });
     });
   }},
-  
+
   testInspect: function() { with(this) {
     var e1 = new S2.FX.Morph('sandbox',{style:'font-size:5px',duration:0.5});
     assertEqual(0, e1.inspect().indexOf('#<S2.FX:'));
@@ -227,7 +227,7 @@ new Test.Unit.Runner({
       assert(e1.inspect().indexOf('finished')>0);
     });
   }},
-  
+
   testDefaultOptions: function() { with(this) {
     var oldDefaultOptions = Object.extend({}, S2.FX.DefaultOptions);
     assertEqual(0.2, S2.FX.DefaultOptions.duration);
@@ -239,36 +239,36 @@ new Test.Unit.Runner({
       S2.FX.DefaultOptions = oldDefaultOptions;
     });
   }},
-  
+
   testParseOptions: function() { with(this) {
     var opt;
-    
+
     opt = S2.FX.parseOptions();
     assertNotUndefined(opt);
 
     opt = S2.FX.parseOptions({duration:1,blech:'2'});
     assert('duration' in opt);
     assert('blech' in opt);
-    
+
     opt = S2.FX.parseOptions('slow');
     assertEqual(1, opt.duration);
-    
+
     opt = S2.FX.parseOptions('fast');
     assertEqual(.1, opt.duration);
-    
+
     opt = S2.FX.parseOptions('blech');
     assertEqual(S2.FX.DefaultOptions.duration, opt.duration);
-    
+
     opt = S2.FX.parseOptions(4);
     assertEqual(4, opt.duration);
-    
+
     var f = function(){};
     opt = S2.FX.parseOptions(f);
     assertIdentical(opt.after, f);
   }},
-  
+
   testShortcutOptions: function() { with(this) {
-    var testVar="?";    
+    var testVar="?";
     $('sandbox').morph('font-size:10px', 0.05);
     wait(150, function() {
       assertEqual('10px', $('sandbox').getStyle('font-size'));
@@ -289,7 +289,7 @@ new Test.Unit.Runner({
       });
     });
   }},
-  
+
   testElementMorph: function() { with(this) {
     $('error_test_ul').morph('font-size:40px', {duration: 0.75}).setStyle({marginRight:'17px'});
     $('error_message_2').morph({
@@ -309,5 +309,5 @@ new Test.Unit.Runner({
       });
     });
   }}
-  
+
 });

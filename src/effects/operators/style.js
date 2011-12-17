@@ -2,7 +2,7 @@
 
 /**
  *  class S2.FX.Operators.Style < S2.FX.Operators.Base
- *  
+ *
  *  Operator for interpolating the CSS styles of an Element.
 **/
 S2.FX.Operators.Style = Class.create(S2.FX.Operators.Base, {
@@ -16,11 +16,11 @@ S2.FX.Operators.Style = Class.create(S2.FX.Operators.Base, {
     var translations = this.options.propertyTransitions || {};
 
     this.tweens = [];
-    
+
     for (var item in this.style) {
       var property = item.underscore().dasherize(),
        from = this.element.getStyle(property), to = this.style[item];
-      
+
       if (from != to) {
         this.tweens.push([
           property,

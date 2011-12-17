@@ -6,22 +6,22 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <link type="text/css" rel="stylesheet" title="default" href="../../themes/default/theme.css" />
   <link type="text/css" rel="stylesheet disabled" title="alternate" href="../../themes/test/theme.css" />
-  
-  <style type="text/css" media="screen">  
+
+  <style type="text/css" media="screen">
     @import url("../functional/css/test.css");
-  </style>  
+  </style>
 
   <script src="../../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
   <script src="../../dist/s2.js" type="text/javascript" charset="utf-8"></script>
-  
+
   <style type="text/css" media="screen">
-  
+
     .wrapper {
       padding: 50px;
       position: relative;
       height: 300px;
     }
-  
+
     #test1, #test2, #test3 {
       width: 300px;
       height: 80px;
@@ -32,53 +32,53 @@
       background-color: #f0f0f0;
       padding: 5px;
     }
-    
+
     #test1 { top: 20px;  }
     #test2 { top: 140px; }
     #test3 { top: 260px; }
-    
+
     #test3 {
       -webkit-transition-property: -webkit-transform opacity;
       -webkit-transition-timing-function: ease-in-out;
       -webkit-transition-duration: 0.6s;
     }
-    
+
   </style>
 
 </head>
 
 <body>
-  
+
   <h1>Effects test</h1>
   <p>Movement along two axes. In environments where animation can be hardware-accelerated, example 1 should look like example 3. Both should appear much smoother than example 2.</p>
 
   <div class="wrapper">
-    
+
     <p id="test1">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
     <p id="test2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    
+
     <p id="test3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    
+
   </div> <!-- .wrapper -->
-  
+
   <div>
     <button id="animate_regular">With CSS transitions</button>
     <button id="animate_no_transitions">Without CSS transitions</button>
     <button id="animate_transforms">With animated CSS transforms</button>
 
     <button id="animate_all">All at the same time</button>
-    
+
     <label>
       <input type="checkbox" id="slow" /> Slow motion
     </label>
   </div>
-  
+
   <script type="text/javascript">
     function getDuration() {
       return $('slow').checked ? 6 : 0.6;
     }
-    
+
     function start1() {
       $('test1').morph('opacity: 0; left: 0px; top: 300px', {
         duration: getDuration(),
@@ -91,7 +91,7 @@
         }
       });
     }
-    
+
     function start2() {
       $('test2').morph('opacity: 0; left: 0px; top: 440px', {
         duration: getDuration(),
@@ -101,8 +101,8 @@
         engine: 'javascript'
       });
     }
-    
-    function start3() {      
+
+    function start3() {
       window.addEventListener('webkitTransitionEnd', function() {
         $('test3').setStyle({
           WebkitTransitionDuration: "0s",
@@ -110,7 +110,7 @@
           opacity: ''
         });
       });
-      
+
       window.setTimeout(function() {
         $('test3').setStyle({
           WebkitTransitionDuration: getDuration() + 's',
@@ -119,13 +119,13 @@
         });
       }, 100);
     }
-    
+
     function startAll() {
       start1(); start2(); start3();
     }
-    
+
     $('animate_regular').observe('click', start1);
-    $('animate_no_transitions').observe('click', start2);    
+    $('animate_no_transitions').observe('click', start2);
     $('animate_transforms').observe('click', start3);
     $('animate_all').observe('click', startAll);
   </script>

@@ -12,10 +12,10 @@
 </head>
 
 <body class="navigation">
-  
+
   <h1 class="logo"><span>script.aculo.us</span></h1>
   <h2>Functional Tests</h2>
-  
+
   <div class="test-list">
 
     <h3>Controls</h3>
@@ -30,53 +30,53 @@
       <li><a href="controls_autocompleter.html">Autocompleter</a></li>
       <li><a href="controls_overlay.html">Overlay</a></li>
     </ul>
-    
+
     <h3>Effects</h3>
 
     <ul>
       <li><a href="effects_units.html">CSS unit support</a></li>
     </ul>
-    
+
     <h3>Manipulations</h3>
-    
+
     <ul>
       <li><a href="manipulations_pan.html">Pan</a></li>
       <li><a href="manipulations_rotate.html">Rotate</a></li>
       <li><a href="manipulations_scale.html">Scale</a></li>
     </ul>
-    
 
-    
+
+
   </div> <!-- .test-list -->
-  
+
   <p>
     script.aculo.us version <b id="scripty_version"></b><br />
     Prototype version <b id="prototype_version"></b>
   </p>
-  
+
   <p id="config">
-    
+
   </p>
-  
-  
+
+
   <script type="text/javascript">
     $('scripty_version').update(S2.Version);
     $('prototype_version').update(Prototype.Version);
-    
+
     var features = [];
     for(var f in Prototype.BrowserFeatures)
       if(Prototype.BrowserFeatures[f]) features.push(f);
-    
+
     $('config').update(
       navigator.userAgent + '<br/><br/>' +
       'Supported features:<br/>'+features.join('<br/>')
     );
-    
+
     $$('a').each( function(anchor) {
       anchor.writeAttribute('target', 'test');
     });
   </script>
-  
-  
+
+
 </body>
 </html>

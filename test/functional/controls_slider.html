@@ -4,12 +4,12 @@
 <head>
   <title>script.aculo.us functional tests</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  
-  
+
+
   <link type="text/css" rel="stylesheet" title="default" href="../../themes/default/theme.css" />
   <link type="text/css" rel="stylesheet disabled" title="alternate" href="../../themes/test/theme.css" />
-  
-  <style type="text/css" media="screen">  
+
+  <style type="text/css" media="screen">
     @import url("css/test.css");
   </style>
 
@@ -30,50 +30,50 @@
       <li>
         <a href="#alternate">Alternate</a>
       </li>
-    </ul>    
+    </ul>
   </div> <!-- #theme_switcher -->
-  
+
   <script type="text/javascript">
     (function() {
       var STYLESHEETS = $A(document.getElementsByTagName('link'));
-      
+
       $('theme_switcher').observe('click', function(event) {
         var element = event.element();
-        if (element.nodeName.toUpperCase() !== 'A') return;        
+        if (element.nodeName.toUpperCase() !== 'A') return;
         var sheet = element.readAttribute('href').split('#').last();
-        
+
         STYLESHEETS.each( function(s) {
           var title = s.readAttribute('title');
           s.disabled = (title !== sheet);
         });
       });
-      
+
     })();
-  </script>  
+  </script>
   <h1>Slider Tests</h1>
-  
+
   <h2>Horizontal slider</h2>
-  
+
   <div style="width: 400px">
-    <div id="slider1"></div>  
+    <div id="slider1"></div>
     <p>Value set to: <span id="log1"></span></p>
   </div>
-  
-  
+
+
   <script type="text/javascript">
     new S2.UI.Slider('slider1', {
       onSlide: function(values, slider) {
         $('log1').update(values[0]);
         $('log1').setStyle({ textDecoration: 'none' });
       },
-      
+
       onChange: function(values, slider) {
         $('log1').update(values[0]);
         $('log1').setStyle({ textDecoration: 'underline' });
       }
     });
   </script>
-  
+
   <div class="description">
     <p>A standard horizontal slider with one value.</p>
     <ul>
@@ -84,54 +84,54 @@
       <li>The slider has an <code>onChange</code> callback that <strong>should</strong> update the value in the element below whenever the slider position <em>is set</em> (e.g., on <code>mouseup</code> or <code>keyup</code>). The number is underlined to distinguish this callback from the <code>onSlide</code> callback.</li>
     </ul>
   </div> <!-- .description -->
-  
-  
+
+
   <h2>Stepped slider</h2>
-  
+
   <div style="width: 400px">
     <div id="stepped_slider"></div>
     <p>Value set to: <span id="stepped_log"></span></p>
   </div>
-  
+
   <script type="text/javascript">
     (function() {
       var log = $('stepped_log');
-      
+
       new S2.UI.Slider('stepped_slider', {
         value: { step: 1 },
-        
+
         onSlide: function(values, slider) {
           log.update(values[0]);
           log.setStyle({ textDecoration: 'none' });
         },
-        
+
         onChange: function(values, slider) {
           log.update(values[0]);
           log.setStyle({ textDecoration: 'underline' });
         }
       });
-    })();  
+    })();
   </script>
-  
+
   <div class="description">
     <p>A slider defined with a <code>value.step</code> option of <code>1</code>.</p>
     <ul>
       <li>It <strong>should</strong> show only integer values.</li>
     </ul>
   </div> <!-- .description -->
-  
-  
+
+
   <h2>Slider with range</h2>
-  
+
   <div style="width: 400px">
     <div id="range_slider"></div>
-    <p>Values set to: <span id="range_log"></span></p>    
+    <p>Values set to: <span id="range_log"></span></p>
   </div>
-  
+
   <script type="text/javascript">
     (function() {
       var log = $('range_log');
-    
+
       new S2.UI.Slider('range_slider', {
         range: true,
         value: { initial: [25, 75], step: 1 },
@@ -139,7 +139,7 @@
           log.update(values.join(', '));
           log.setStyle({ textDecoration: 'none' });
         },
-      
+
         onChange: function(values, slider) {
           log.update(values.join(', '));
           log.setStyle({ textDecoration: 'underline' });
@@ -157,16 +157,16 @@
       <li>Dragging the range <strong>should not</strong> change its size; the difference between the two handle values <strong>should</strong> remain fixed.</li>
 
     </ul>
-  </div> <!-- .description -->  
-  
+  </div> <!-- .description -->
+
   <h2>Vertical slider</h2>
-  
+
   <div style="height: 400px">
-    <div id="slider2"></div>  
+    <div id="slider2"></div>
     <p>Value set to: <span id="log2"></span></p>
   </div>
-  
-  
+
+
   <script type="text/javascript">
     new S2.UI.Slider('slider2', {
       orientation: 'vertical',
@@ -174,18 +174,18 @@
         $('log2').update(values[0]);
         $('log2').setStyle({ textDecoration: 'none' });
       },
-      
+
       onChange: function(values, slider) {
         $('log2').update(values[0]);
         $('log2').setStyle({ textDecoration: 'underline' });
       }
     });
   </script>
-  
+
   <div class="description">
     <p>A standard vertical slider with one value.</p>
   </div> <!-- .description -->
-  
-  
+
+
 </body>
 </html>

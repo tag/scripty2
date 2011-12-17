@@ -2,7 +2,7 @@ new Test.Unit.Runner({
   setup: function(){
     frameCounter = 0;
   },
-  
+
   testHeartbeat: function() { with(this) {
     var tmp = 0, tmp2 = 0;
     document.observe('effect:heartbeat', function(){
@@ -21,17 +21,17 @@ new Test.Unit.Runner({
       });
     });
   }},
-  
+
   testHeartbeatFramerate: function(){ with(this) {
     var oldHeartbeat = S2.FX.getHeartbeat();
     oldHeartbeat.stop();
     delete oldHeartbeat;
-    
+
     var heartbeat = new S2.FX.Heartbeat({framerate:2}), frameCounter = 0;
     S2.FX.setHeartbeat(heartbeat);
     var o = function(){ frameCounter++; };
     document.observe('effect:heartbeat', o);
-    
+
     $('sandbox').morph('font-size:10px');
     wait(1100, function(){
       assertEqual(2, frameCounter);

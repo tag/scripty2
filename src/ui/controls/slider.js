@@ -1,13 +1,13 @@
 (function(UI) {
   /** section: scripty2 ui
    *  class S2.UI.Slider < S2.UI.Base
-   *  
+   *
    *  A slider.
   **/
   UI.Slider = Class.create(UI.Base, UI.Mixin.Element, {
     NAME: "S2.UI.Slider",
 
-    /**  
+    /**
      *  new S2.UI.Slider(element, options)
      *  - element (Element): The element to act as the slider track.
      *  - options (Object): An object containing overrides for the default
@@ -16,39 +16,39 @@
     initialize: function(element, options) {
       this.element = $(element);
       var opt = this.setOptions(options);
-    
+
       UI.addClassNames(this.element, 'ui-slider ui-widget ' +
        'ui-widget-content ui-corner-all');
-      
-      this.orientation = opt.orientation; 
-    
+
+      this.orientation = opt.orientation;
+
       this.element.addClassName('ui-slider-' + this.orientation);
-    
+
       this._computeTrackLength();
 
       var initialValues = opt.value.initial;
       if (!Object.isArray(initialValues)) {
         initialValues = [initialValues];
-      } 
-    
+      }
+
       this.values  = initialValues;
-      this.handles = [];    
+      this.handles = [];
       this.values.each( function(value, index) {
         var handle = new Element('a', { href: '#' });
         handle.store('ui.slider.handle', index);
         this.handles.push(handle);
         this.element.insert(handle);
       }, this);
-        
+
       UI.addClassNames(this.handles, 'ui-slider-handle ui-state-default ' +
        'ui-corner-all');
       this.handles.invoke('writeAttribute', 'tabIndex', '0');
-    
+
       this.activeHandles = [this.handles.first()];
-    
+
       this.handles.invoke('observe', 'click', Event.stop);
       UI.addBehavior(this.handles, [UI.Behavior.Hover, UI.Behavior.Focus]);
-    
+
       this.observers = {
         focus:          this.focus.bind(this),
         blur:           this.blur.bind(this),
@@ -61,7 +61,7 @@
         rangeMouseMove: this.rangeMouseMove.bind(this),
         rangeMouseUp:   this.rangeMouseUp.bind(this)
       };
-    
+
       var v = opt.value;
       if (v.step !== null) {
         this._possibleValues = [];
@@ -69,7 +69,7 @@
           this._possibleValues.push(val);
         }
         this._possibleValues.push(v.max);
-      
+
         this.keyboardStep = v.step;
       } else if (opt.possibleValues) {
         this._possibleValues = opt.possibleValues.clone();
@@ -78,13 +78,13 @@
         // We need a step value for incrementing via keyboard.
         this.keyboardStep = (v.max - v.min) / 100;
       }
-    
+
       this.range = null;
       if (opt.range && this.values.length === 2) {
         this.restricted = true;
         this.range = new Element('div', { 'class': 'ui-slider-range' });
         this.element.insert(this.range);
-      
+
         // EXPLANATION FROM jQUERY UI:
         // This isn't the most fittingly semantic framework class for this
         // element, but worked best visually with a variety of themes.
@@ -92,58 +92,58 @@
       } else if (opt.range) {
         throw "Must have exactly 2 handles to depict a slider range.";
       }
-    
+
       this._computeTrackLength();
       this._computeHandleLength();
-    
+
       this.active   = false;
       this.dragging = false;
       this.disabled = false;
-    
+
       this.addObservers();
-    
+
       this.values.each(this._setValue, this);
-    
+
       this.initialized = true;
     },
-  
+
     addObservers: function() {
-      var o = this.observers;      
+      var o = this.observers;
       this.on('mousedown', o.mousedown);
       if (this.range) {
         this.on('mousedown', '.ui-slider-range', o.rangeMouseDown);
       }
-      
+
       this.on('keydown', '.ui-slider-handle', o.keydown);
       this.on('keyup',   '.ui-slider-handle', o.keyup);
-      
+
       this.handles.invoke('observe', 'focus', o.focus);
       this.handles.invoke('observe', 'blur',  o.blur);
     },
-    
+
     removeObservers: function($super) {
       $super();
       var o = this.observers;
       this.handles.invoke('stopObserving', 'focus', o.focus);
       this.handles.invoke('stopObserving', 'blur',  o.blur);
     },
-  
+
     _computeTrackLength: function() {
       var length, dim;
       if (this.orientation === 'vertical') {
         dim = this.element.offsetHeight;
-        length = (dim !== 0) ? dim : 
+        length = (dim !== 0) ? dim :
          window.parseInt(this.element.getStyle('height'), 10);
       } else {
         dim = this.element.offsetWidth;
         length = (dim !== 0) ? dim :
          window.parseInt(this.element.getStyle('width'), 10);
       }
-    
+
       this._trackLength = length;
       return length;
     },
-  
+
     _computeHandleLength: function() {
       var handle = this.handles.first(), length, dim;
 
@@ -175,27 +175,27 @@
         return currentValue + (this.keyboardStep * direction);
       }
     },
-  
+
     keydown: function(event) {
       if (this.options.disabled) return;
-    
+
       var handle = event.findElement();
       var index  = handle.retrieve('ui.slider.handle');
       var opt = this.options;
-    
+
       if (!Object.isNumber(index)) return;
-    
-      var interceptKeys = [Event.KEY_HOME, Event.KEY_END, Event.KEY_UP, 
+
+      var interceptKeys = [Event.KEY_HOME, Event.KEY_END, Event.KEY_UP,
        Event.KEY_DOWN, Event.KEY_LEFT, Event.KEY_RIGHT];
-     
+
       if (!interceptKeys.include(event.keyCode)) return;
       event.preventDefault();
-    
+
       handle.addClassName('ui-state-active');
-      
+
       var currentValue, newValue, step = this.keyboardStep;
       currentValue = newValue = this.values[index];
-      
+
       switch (event.keyCode) {
       case Event.KEY_HOME:
         newValue = opt.value.min; break;
@@ -212,12 +212,12 @@
         newValue = this._nextValue(currentValue, -1);
         break;
       }
-    
+
       // We're 'dragging' in the sense that we don't want the "changed"
       // event to fire until keyup.
       this.dragging = true;
       this._setValue(newValue, index);
-      
+
       // In Safari, the keydown event fires repeatedly when the user holds the
       // button down. In other browsers, we have to do this manually.
       if (!Prototype.Browser.WebKit) {
@@ -225,9 +225,9 @@
         // thereafter.
         var interval = this._timer ? 0.1 : 1;
         this._timer = arguments.callee.bind(this).delay(interval, event);
-      }    
+      }
     },
-  
+
     keyup: function(event) {
       this.dragging = false;
       if (this._timer) {
@@ -235,11 +235,11 @@
         this._timer = null;
       }
       this._updateFinished();
-    
+
       var handle = event.findElement();
       handle.removeClassName('ui-state-active');
     },
-  
+
     /**
      *  S2.UI.Slider#setValue(sliderValue[, handleIndex]) -> this
      *  - sliderValue (Number): The new value for the slider handle.
@@ -252,17 +252,17 @@
       this._setValue(sliderValue, handleIndex);
       this._fireChangedEvent();
     },
-    
+
     _setValue: function(sliderValue, handleIndex) {
       if (!this.activeHandles) {
         this.activeHandles = [this.handles[handleIndex || 0]];
         this._updateStyles();
       }
-      
+
       var activeHandle = this.activeHandles.first();
-    
+
       handleIndex = handleIndex || activeHandle.retrieve('ui.slider.handle') || 0;
-       
+
       if (this.initialized && this.restricted) {
         // If there's more than one handle, the active one could be fenced in
         // according to the positions of adjacent handles.
@@ -274,17 +274,17 @@
           sliderValue = this.values[handleIndex + 1];
         }
       }
-    
-      sliderValue = this._getNearestValue(sliderValue);    
+
+      sliderValue = this._getNearestValue(sliderValue);
       this.values[handleIndex] = sliderValue;
-    
+
       var prop = (this.orientation === 'vertical') ? 'top' : 'left';
-      var css = {};    
-      css[prop] = this._valueToPx(sliderValue) + 'px';    
+      var css = {};
+      css[prop] = this._valueToPx(sliderValue) + 'px';
       this.handles[handleIndex].setStyle(css);
-    
+
       this._drawRange();
-    
+
       if (!this.dragging && !this.undoing && !this.initialized)  {
         this._updateFinished();
       }
@@ -296,17 +296,17 @@
         });
         this.options.onSlide(this.values, this);
       }
-      
+
       return this;
     },
-  
+
     _getNearestValue: function(value) {
       // TODO: Implement fully.
       var range = this.options.value;
-    
+
       if (value < range.min) value = range.min;
       if (value > range.max) value = range.max;
-    
+
       // If `options.value.step` was specified, we're constrained to a set of
       // possible values. Figure out which two values we're between, then pick
       // the one we're closer to.
@@ -320,52 +320,52 @@
         left = this._possibleValues[i - 1];
         value = value.nearer(left, right);
       }
-    
+
       return value;
     },
-  
+
     _valueToPx: function(value) {
       var range = this.options.value;
       var pixels = (this._trackLength - this._handleLength ) /
        (range.max - range.min);
       pixels *= (value - range.min);
-    
+
       if (this.orientation === 'vertical') {
         pixels = (this._trackLength - pixels) - this._handleLength;
       } else {
         //pixels += this._handleLength;
       }
-    
+
       return Math.round(pixels);
     },
-  
+
     mousedown: function(event) {
       var opt = this.options;
-      if (!event.isLeftClick() || opt.disabled) return;  
+      if (!event.isLeftClick() || opt.disabled) return;
       event.stop();
-      
+
       // Don't handle mousedown inside a range. There's a separate handler
       // for that.
       if (event.findElement('.ui-slider-range')) return;
-      
+
       // Remember the old values in case we have to undo the action.
       this._saveValues();
-    
+
       this.active = true;
       var target  = event.findElement();
       var pointer = event.pointer();
-    
+
       if (target === this.element) {
         // The user clicked on the track itself.
         var trackOffset = this.element.cumulativeOffset();
-      
+
         var newPosition = {
           x: Math.round(pointer.x - trackOffset.left - this._handleLength / 2 - this._trackMargin),
           y: Math.round(pointer.y - trackOffset.top - this._handleLength / 2 - this._trackMargin)
         };
-      
+
         this._setValue(this._pxToValue(newPosition));
-      
+
         this.activeHandles = this.activeHandles || [this.handles.first()];
         handle = this.activeHandles.first();
         this._updateStyles();
@@ -374,7 +374,7 @@
         // The user clicked on a handle.
         handle = event.findElement('.ui-slider-handle');
         if (!handle) return;
-      
+
         this.activeHandles = [handle];
         this._updateStyles();
         var handleOffset = handle.cumulativeOffset();
@@ -383,76 +383,76 @@
           y: pointer.y - (handleOffset.top + this._handleLength / 2)
         };
       }
-      
+
       // Listen for mousemove and mouseup on document.
       document.observe('mousemove', this.observers.mousemove);
       document.observe('mouseup',   this.observers.mouseup);
     },
-  
+
     mouseup: function(event) {
       if (this.active && this.dragging) {
         this._updateFinished();
         event.stop();
       }
-    
+
       this.active = this.dragging = false;
-    
+
       this.activeHandles = null;
       this._updateStyles();
-    
+
       document.stopObserving('mousemove', this.observers.mousemove);
       document.stopObserving('mouseup',   this.observers.mouseup);
     },
-  
-  
+
+
     mousemove: function(event) {
       if (!this.active) return;
       event.stop();
-    
-      this.dragging = true;    
+
+      this.dragging = true;
       this._draw(event);
-    
-      if (Prototype.Browser.WebKit) window.scrollBy(0, 0);    
+
+      if (Prototype.Browser.WebKit) window.scrollBy(0, 0);
     },
-  
+
     rangeMouseDown: function(event) {
       var pointer = event.pointer();
 
       var trackOffset = this.element.cumulativeOffset();
-    
+
       var newPosition = {
         x: Math.round(pointer.x - trackOffset.left),
         y: Math.round(pointer.y - trackOffset.top)
       };
-    
+
       this._saveValues();
       this._rangeInitialValues = this.values.clone();
       this._rangePseudoValue = this._pxToValue(newPosition);
-    
+
       document.observe('mousemove', this.observers.rangeMouseMove);
       document.observe('mouseup',   this.observers.rangeMouseUp);
-      
-         
+
+
       // Mark both handles as active.
       this.activeHandles = this.handles.clone();
-      this._updateStyles();    
+      this._updateStyles();
     },
-  
+
     rangeMouseMove: function(event) {
       this.dragging = true;
       event.stop();
-    
+
       var opt = this.options;
-    
+
       var pointer = event.pointer();
       var trackOffset = this.element.cumulativeOffset();
-    
+
       var newPosition = {
         x: Math.round(pointer.x - trackOffset.left),
         y: Math.round(pointer.y - trackOffset.top)
       };
-    
-      var value = this._pxToValue(newPosition);    
+
+      var value = this._pxToValue(newPosition);
       var valueDelta = value - this._rangePseudoValue;
       var newValues = this._rangeInitialValues.map(
        function(v) { return v + valueDelta; });
@@ -471,47 +471,47 @@
 
       newValues.each(this._setValue, this);
     },
-  
+
     rangeMouseUp: function(event) {
       this.dragging = false;
 
       document.stopObserving('mousemove', this.observers.rangeMouseMove);
       document.stopObserving('mouseup',   this.observers.rangeMouseUp);
-    
+
       this._updateFinished();
     },
-  
-  
+
+
     _draw: function(event) {
       var pointer = event.pointer();
       var trackOffset = this.element.cumulativeOffset();
-    
+
       pointer.x -= (this._offsets.x + trackOffset.left + this._handleLength / 2 + this._trackMargin);
       pointer.y -= (this._offsets.y + trackOffset.top + this._handleLength / 2 + this._trackMargin);
-    
+
       this._setValue(this._pxToValue(pointer));
     },
-  
+
     _pxToValue: function(offsets) {
       var opt = this.options;
       var offset = (this.orientation === 'horizontal') ?
        offsets.x : offsets.y;
-     
-      var value = ((offset / (this._trackLength - this._handleLength) * 
+
+      var value = ((offset / (this._trackLength - this._handleLength) *
        (opt.value.max - opt.value.min)) + opt.value.min);
-     
+
       // Invert the value if it's vertical. Because a higher pixel value
       // means a lower value.
       if (this.orientation === 'vertical') {
         value = opt.value.max - (value - opt.value.min);
       }
-     
+
       return value;
     },
-  
-    /** 
+
+    /**
      *  S2.UI.Slider#undo() -> this
-     *  
+     *
      *  Reverts the effect of the previous call to [[S2.UI.Slider#setValue]].
      *
      *  NOTE: Calling this method will change the slider's value and thus
@@ -523,59 +523,59 @@
     undo: function() {
       if (!this._oldValues) return;
       this._restoreValues();
-    
+
       this.undoing = true;
       this.values.each(this._setValue, this);
       this.undoing = false;
-      
+
       this._fireChangedEvent();
     },
-    
+
     // Set the current values as the values that will be restored after a
     // call to `undo`.
     _saveValues: function() {
       this._oldValues = this.values.clone();
     },
-    
+
     _restoreValues: function() {
       if (!this._oldValues) return;
       this.values = this._oldValues.clone();
       this._oldValues = null;
     },
-    
+
     _fireChangedEvent: function() {
       var result = this.element.fire("ui:slider:value:changed", {
         slider: this,
         values: this.values
       });
-      
+
       return result;
     },
-  
-    _updateFinished: function() {      
-      var result = this._fireChangedEvent();    
+
+    _updateFinished: function() {
+      var result = this._fireChangedEvent();
       if (result.stopped) {
         this.undo();
         return;
       }
-    
+
       this.activeHandles = null;
       this._updateStyles();
-      
+
       this.options.onChange(this.values, this);
     },
-  
+
     _updateStyles: function() {
       UI.removeClassNames(this.handles, 'ui-state-active');
       if (this.activeHandles) {
         UI.addClassNames(this.activeHandles, 'ui-state-active');
       }
     },
-  
-    _drawRange: function() {    
+
+    _drawRange: function() {
       if (!this.range) return;
       var values = this.values, pixels = values.map(this._valueToPx, this);
-    
+
       if (this.orientation === 'vertical') {
         this.range.setStyle({
           top: pixels[1] + 'px',
@@ -596,7 +596,7 @@
        'ui-state-focus');
       handle.addClassName('ui-state-focus');
     },
-  
+
     blur: function(event) {
       event.findElement().removeClassName('ui-state-focus');
     }
@@ -609,7 +609,7 @@
       value: { min: 0, max: 100, initial: 0, step: null },
       possibleValues: null,
       orientation: 'horizontal',
-    
+
       onSlide:  Prototype.emptyFunction,
       onChange: Prototype.emptyFunction
     }

@@ -12,14 +12,14 @@ S2.UI.Mixin.Trackable = {
       klass.instances = [];
     }
     if (!klass.instances.include(this)) {
-      klass.instances.push(this);      
+      klass.instances.push(this);
     }
-    
+
     if (Object.isFunction(klass.onRegister)) {
       klass.onRegister.call(klass, this);
     }
   },
-  
+
   /**
    *  S2.UI.Mixin.Trackable.unregister() -> undefined
   **/

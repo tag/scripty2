@@ -1,12 +1,12 @@
 /** section: scripty2 ui
  * S2.UI.Multitouch
  * Multitouch extensions.
- * The `manipulate:update` event is fired when an element is "manipulated", 
+ * The `manipulate:update` event is fired when an element is "manipulated",
  * which means when it is panned, scaled or rotated. Consumers of this event
  * do not need to worry about how the system determines if a manipulation
  * takes place.
- * 
- * For now, Multitouch support needs to explicitly enabled, by setting 
+ *
+ * For now, Multitouch support needs to explicitly enabled, by setting
  *
  *     <script>S2.enableMultitouchSupport = true;</script>
  *
@@ -18,41 +18,41 @@
  *
  * <img src="../../../images/manipulate.png" alt="Manipulations"/>
  *
- * * Nokia's Multitouch API - on supported devices/browsers, 
- *   touching an element with one or more fingers fire the manipulate:update event. 
+ * * Nokia's Multitouch API - on supported devices/browsers,
+ *   touching an element with one or more fingers fire the manipulate:update event.
  *   Panning, scaling and rotation can take place at the same time.
- * * Apple's Touch API - on iOS devices (Safari/WebKit on iPad, iPhone and iPod touch), 
- *   touching an element with one or more fingers fire the manipulate:update 
+ * * Apple's Touch API - on iOS devices (Safari/WebKit on iPad, iPhone and iPod touch),
+ *   touching an element with one or more fingers fire the manipulate:update
  *   event. Panning, scaling and rotation can take place at the same time.
- * * Mouse dragging (with optional shift key) - on all other browsers, 
- *   manipulate:update events are fired when clicking on an element with the mouse, 
- *   and then moving the mouse with the mouse button held down. Pressing the shift key 
+ * * Mouse dragging (with optional shift key) - on all other browsers,
+ *   manipulate:update events are fired when clicking on an element with the mouse,
+ *   and then moving the mouse with the mouse button held down. Pressing the shift key
  *   when clicking the element toggles to rotation/scale mode, from the default panning mode.
  *
- * In addition to the usual event information, the manipulate:update event sends along four 
+ * In addition to the usual event information, the manipulate:update event sends along four
  * pieces of information in it's `memo` property:
  *
  *     { panX: 12, panY: -110, rotation: 1.5707633, scale: 1.2 }
  *     // panned 12px to the right, 110px up, about 90° rotated, scaled up by 20%
  *
  *
- * * `panX` and `panY` contain information about how an element was moved, 
- *   relatively to it's original page position. These values are given in pixels. 
- *   These panning coordinates persist between individual touch and dragging actions. 
- *   If two fingers are used to drag, the panning is relative to the mid point 
- *   between those two touches. On browsers or hardware without touch or multitouch support, 
+ * * `panX` and `panY` contain information about how an element was moved,
+ *   relatively to it's original page position. These values are given in pixels.
+ *   These panning coordinates persist between individual touch and dragging actions.
+ *   If two fingers are used to drag, the panning is relative to the mid point
+ *   between those two touches. On browsers or hardware without touch or multitouch support,
  *   dragging with the mouse initiates manipulate:update events that contain panX and panY information.
- * * `rotation` contains an element's rotation relative to it's original position 
- *   (set with [[Element#transform]]). This value is given in radians. If multitouch is supported, 
- *   the element can be rotated by using two fingers and making a rotation movement. On browsers or 
- *   hardware without touch or multitouch support, dragging with the mouse while holding down the 
+ * * `rotation` contains an element's rotation relative to it's original position
+ *   (set with [[Element#transform]]). This value is given in radians. If multitouch is supported,
+ *   the element can be rotated by using two fingers and making a rotation movement. On browsers or
+ *   hardware without touch or multitouch support, dragging with the mouse while holding down the
  *   shift key initiates rotation (and scaling), relative to the element's mid-point.
- * * `scale` contains an element's scale factor, relative to it's original scale 
- *   (set with Element#transform). This value is a factor of the original size, 
- *   where 1 is equal to the original size, 2 is twice the size, 0.5 half the size, and so on. 
- *   If multitouch is supported, the element can be scaled by using two fingers and making a 
- *   pinch or reverse-pinch (expand) movement. On browsers or hardware without touch or multitouch 
- *   support, dragging with the mouse while holding down the shift key initiates scaling 
+ * * `scale` contains an element's scale factor, relative to it's original scale
+ *   (set with Element#transform). This value is a factor of the original size,
+ *   where 1 is equal to the original size, 2 is twice the size, 0.5 half the size, and so on.
+ *   If multitouch is supported, the element can be scaled by using two fingers and making a
+ *   pinch or reverse-pinch (expand) movement. On browsers or hardware without touch or multitouch
+ *   support, dragging with the mouse while holding down the shift key initiates scaling
  *   (and rotation), relative to the element's mid-point.
  *
  * Example for observing manipulations and logging the components:
@@ -64,9 +64,9 @@
 
 document.observe('dom:loaded',function(){
   if(!S2.enableMultitouchSupport) return;
-  
+
   var b = $(document.body), sequenceId = 0;
-  
+
   function initElementData(element){
     element._rotation = element._rotation || 0;
     element._scale = element._scale || 1;
@@ -75,19 +75,19 @@ document.observe('dom:loaded',function(){
     element._pans = [[0,0],[0,0],[0,0]];
     element._panidx = 1;
   }
-  
+
   function setElementData(element, rotation, scale, panX, panY){
     element._rotation = rotation;
     element._scale = scale;
     element._panX = panX;
     element._panY = panY;
   }
-  
+
   function fireEvent(element, data){
-    element.fire('manipulate:update', 
+    element.fire('manipulate:update',
       Object.extend(data, { id: sequenceId }));
   }
-  
+
   function setupIPhoneEvent(){
     var element, rotation, scale,
       touches = {}, t1 = null, t2 = null, state = 0, oX, oY,
@@ -161,32 +161,32 @@ document.observe('dom:loaded',function(){
       });
     });
   }
-  
+
   function setupBridgedEvent(){
     var element, rotation, scale, panX, panY, active = false;
-    
+
     b.observe('touchstart', function(event){
       event.preventDefault();
     });
-    
+
     b.observe('transformactionstart', function(event){
       // for now, always stop the default manipulation events
       // this prevents Starlight from zooming/panning the window
       // with touching
       event.stop();
-      
+
       element = event.element();
       initElementData(element);
       active = true;
-    });    
+    });
     b.observe('transformactionupdate', function(event){
       element = event.element();
       rotation = element._rotation + event.rotate;
       scale = element._scale * event.scale;
       panX = element._panX + event.translateX;
       panY = element._panY + event.translateY;
-      
-      fireEvent(element, { 
+
+      fireEvent(element, {
         rotation: rotation, scale: scale,
         panX: panX, panY: panY,
         clientX: event.clientX, clientY: event.clientY
@@ -197,15 +197,15 @@ document.observe('dom:loaded',function(){
       element = event.element();
       if(element) setElementData(element, rotation, scale, panX, panY);
       active = false;
-      
-      var speed = Math.sqrt(event.translateSpeedX*event.translateSpeedX + 
+
+      var speed = Math.sqrt(event.translateSpeedX*event.translateSpeedX +
           event.translateSpeedY*event.translateSpeedY);
-        
+
       if(speed>25){
         //$('debug').innerHTML = speed+',x:'+event.panSpeedX+',y:'+event.panSpeedY;
-        element.fire('manipulate:flick', { 
-          speed: speed, 
-          direction: Math.atan2(event.translateSpeedY,event.translateSpeedX) 
+        element.fire('manipulate:flick', {
+          speed: speed,
+          direction: Math.atan2(event.translateSpeedY,event.translateSpeedX)
         });
       }
     });
@@ -219,7 +219,7 @@ document.observe('dom:loaded',function(){
       event.stop();
     });
   }
-  
+
   // when shift is pressed, do mouse-based manipulate scale/rotate events
   // if not, do mouse-based panning manipulate events
   // todo: refactoring and performance optimization
@@ -228,18 +228,18 @@ document.observe('dom:loaded',function(){
       initialDistance, initialRotation, oX, oY, rotation, scale, distance;
     function objectForScaleEvent(event){
       var o = element.viewportOffset(),
-        a = (event.pageX-o.left)-mX, 
+        a = (event.pageX-o.left)-mX,
         b = (event.pageY-o.top)-mY;
       distance = Math.sqrt(a*a + b*b);
       scale = element._scale * distance/initialDistance;
       rotation = element._rotation + Math.atan2(b,a) - initialRotation;
-      return { 
-        rotation: rotation, scale: scale, 
+      return {
+        rotation: rotation, scale: scale,
         panX: element._panX, panY: element._panY };
     }
     function objectForPanEvent(event){
-      return { 
-        rotation: element._rotation, scale: element._scale, 
+      return {
+        rotation: element._rotation, scale: element._scale,
         panX: element._panX+event.pageX-oX, panY: element._panY+event.pageY-oY };
     }
     b.observe('mousedown', function(event){
@@ -250,7 +250,7 @@ document.observe('dom:loaded',function(){
       active = true;
       initElementData(element);
       var o =  element.viewportOffset();
-      mX = element.offsetWidth/2; 
+      mX = element.offsetWidth/2;
       mY = element.offsetHeight/2;
       var a = event.pageX-o.left-mX, b = event.pageY-o.top-mY;
       initialDistance = Math.sqrt(a*a+b*b);
@@ -278,7 +278,7 @@ document.observe('dom:loaded',function(){
     });
     b.observe('dragstart', function(event){ event.stop(); });
   }
-  
+
   try {
     document.createEvent("TransformActionEvent");
     return setupBridgedEvent();
@@ -288,6 +288,6 @@ document.observe('dom:loaded',function(){
     document.createEvent("TouchEvent");
     return setupIPhoneEvent();
   } catch(e) {}
-  
-  return setupGenericEvent(); 
+
+  return setupGenericEvent();
 });
