@@ -4,18 +4,18 @@
 
 <div class="page-introduction">
   <p>Welcome to the scripty2 API Documentation.</p>
-    
+
   <p>
     scripty2 is divided into three parts, <em>core</em>, <em>fx</em>, and <em>ui</em>,
     and supports IE6+, Safari 3+, Firefox 3+, Chrome, Opera 10 and most WebKit-based browsers.
   </p>
-  
+
   <p>
     This rewrite of the script.aculo.us library is in beta. While we advise to proceed with caution,
     scripty2 is used in many live, production projects like <a href="http://twistori.com">twistori</a>
     and <a href="http://letsfreckle.com">freckle</a> and it works great!
-  </p>  
-  
+  </p>
+
   <p style="color:orange">
     <b>Beta notice:</b> scripty2 is currently in beta.
     The S2.UI API is not final and subject to change.
@@ -27,7 +27,7 @@
   <div class="section-title">
     <h3>Sections</h3>
   </div>
-  
+
   <div class="section-content">
     <ul class="section-list">
       <% @root.sections.each do |section| %>
@@ -36,7 +36,7 @@
           <a href="<%= path_to_section(section) %>"><%= section.name %></a>
         </h4>
         <p><%= htmlize(section.short_description) %></p>
-      </li>      
+      </li>
       <% end %>
     </ul>
   </div>
@@ -46,7 +46,7 @@
   <div class="section-title">
     <h3>Getting started</h3>
   </div>
-  
+
   <div class="section-content">
     <ul class="section-list">
       <li>
@@ -69,22 +69,22 @@
 </div>
 
 <div class="section">
-  
+
   <div class="section-title">
     <h3>UI Controls</h3>
   </div> <!-- .section-title -->
-  
+
   <div class="section-content">
     <p>The scripty2 UI controls are under heavy development and are still in alpha. Consult the <code>README</code> for instructions on how to include these UI controls in the scripty2 distributable.</p>
   </div> <!-- .section-content -->
-  
+
 </div> <!--.section -->
 
 <div class="section">
   <div class="section-title">
     <h3>Tutorials &amp; Demos</h3>
   </div>
-  
+
   <div class="section-content">
     <ul class="section-list">
       <li>
@@ -103,7 +103,7 @@
   <div class="section-title">
     <h3>Help &amp; Community</h3>
   </div>
-  
+
   <div class="section-content">
     <ul class="section-list">
       <li>
@@ -112,7 +112,7 @@
           You're welcome to do so on the <a href="http://groups.google.com/group/scripty2">scripty2 Google Group</a>.
         </p>
         <p>
-          Found a genuine bug? 
+          Found a genuine bug?
           Please report in detail on our <a href="https://prototype.lighthouseapp.com/projects/10606-scripty2">Lighthouse bug tracker.</a>.
         </p>
         <p>

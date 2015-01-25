@@ -1,7 +1,7 @@
 (function(UI) {
   /** section: scripty2 ui
    *  class S2.UI.ProgressBar < S2.UI.Base
-   *  
+   *
    *  A progress bar.
   **/
   UI.ProgressBar = Class.create(UI.Base, {
@@ -66,9 +66,9 @@
       return this;
     },
 
-    /** 
+    /**
      *  S2.UI.ProgressBar#undo() -> this
-     *  
+     *
      *  Reverts the effect of the previous call to
      *  [[S2.UI.ProgressBar#setValue]].
     **/
@@ -97,12 +97,12 @@
       } else {
         this.valueElement.removeClassName('ui-corner-right');
       }
-      
-      
-      var width    = window.parseInt(this.element.getStyle('width'), 10);      
+
+
+      var width    = window.parseInt(this.element.getStyle('width'), 10);
       var newWidth = (width * value) / 100;
       var css      = "width: #{0}px".interpolate([newWidth]);
-      
+
       UI.makeVisible(this.valueElement, (value > this.options.value.min));
       this.valueElement.morph(css, { duration: 0.7, transition: 'linear' });
       this.element.writeAttribute('aria-valuenow', value);
@@ -114,5 +114,5 @@
       value: { min: 0, max: 100, initial: 0 }
     }
   });
-  
+
 })(S2.UI);

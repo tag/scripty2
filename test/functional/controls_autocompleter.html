@@ -7,13 +7,13 @@
 
   <link type="text/css" rel="stylesheet" title="default" href="../../themes/default/theme.css" />
   <link type="text/css" rel="stylesheet disabled" title="alternate" href="../../themes/test/theme.css" />
-  
-  <style type="text/css" media="screen">  
+
+  <style type="text/css" media="screen">
     @import url("css/test.css");
   </style>
   <script src="../../lib/prototype.js" type="text/javascript" charset="utf-8"></script>
   <script src="../../dist/s2.js" type="text/javascript" charset="utf-8"></script>
-  
+
   <script src="js/switcher.js" type="text/javascript"></script>
 </head>
 
@@ -29,42 +29,42 @@
       <li>
         <a href="#alternate">Alternate</a>
       </li>
-    </ul>    
+    </ul>
   </div> <!-- #theme_switcher -->
-  
+
   <script type="text/javascript">
     (function() {
       var STYLESHEETS = $A(document.getElementsByTagName('link'));
-      
+
       $('theme_switcher').observe('click', function(event) {
         var element = event.element();
-        if (element.nodeName.toUpperCase() !== 'A') return;        
+        if (element.nodeName.toUpperCase() !== 'A') return;
         var sheet = element.readAttribute('href').split('#').last();
-        
+
         STYLESHEETS.each( function(s) {
           var title = s.readAttribute('title');
           s.disabled = (title !== sheet);
         });
       });
-      
+
     })();
-  </script>  
+  </script>
   <h1>Autocompleter Tests</h1>
-  
+
   <h2>Standard Autocompleter</h2>
-  
+
   <span id="autocompleter1">
     <input type="text" name="firstname" />
   </span> <!-- #autocompleter1 -->
-  
+
   <span class="ui-widget">
     <button id="dummy1">Dummy control</button>
   </span>
-  
-  
+
+
   <script type="text/javascript">
     new S2.UI.Button('dummy1');
-  
+
     var STATE_NAMES = [
       'Alabama',
       'Alaska',
@@ -116,19 +116,19 @@
       'West Virginia',
       'Wisconsin',
       'Wyoming'
-    ];  
-  
+    ];
+
     new S2.UI.Autocompleter('autocompleter1', {
       choices: STATE_NAMES
     });
   </script>
-  
+
   <div>
     <select>
       <option>Dummy select box</option>
     </select>
   </div>
-  
+
   <div class="description">
     A standard autocompleter (<code>Autocompleter.Local</code> in scripty1 parlance). The choices are the fifty U.S. states. It should behave like a regular text box, with a few exceptions:
     <ul>

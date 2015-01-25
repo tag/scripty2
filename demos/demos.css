@@ -28,12 +28,12 @@ code {
     color: #6c8f3f;
     font-weight: bold;
   }
-  
+
     .panel h1 a {
       color: #6c8f3f;
       text-decoration: none;
     }
-    
+
     .panel p {
       clear: both;
       margin: 0 15px 1.0em;
@@ -41,24 +41,24 @@ code {
       line-height: 13px;
       color: #8a8a8a;
     }
-    
+
     .panel pre {
       margin: 0 15px 1.0em;
     }
-    
+
     .panel a {
       color: #6c8f3f;
       font-weight: bold;
       text-decoration: none;
     }
-    
+
     .panel ul {
       margin: 15px 0;
       height: 15px;
       padding: 5px 15px 5px 10px;
       background: #afe16d;
     }
-    
+
       .panel li {
         float: left;
         list-style-type: none;
@@ -73,27 +73,27 @@ code {
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
       }
-    
+
     .panel h6 {
       margin: 0 15px;
       font-size: 12px;
       color: #6c8f3f;
     }
-    
+
     .panel strong {
       border-bottom: 1px solid #ccc;
     }
-    
+
     .panel .warning {
       font-weight: bold;
       font-size: 15px !important;
       color: #900;
     }
-    
+
       .panel .warning b {
         color: #900;
       }
-      
+
   .panel button {
     float: right;
     background: #6c8f3f;
@@ -105,8 +105,8 @@ code {
     font-size: 18px;
     border: 0;
   }
-    
-    
+
+
 .canvas {
   /*outline: 3px solid #3bf;*/
   width: 900px;
@@ -122,7 +122,7 @@ code {
     font-size: 16px;
     line-height: 1.2em;
   }
-  
+
   .panel.big h6 {
     font-size: 19px;
   }

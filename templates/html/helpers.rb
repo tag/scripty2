@@ -24,20 +24,20 @@ module PDoc
           def tag(tag_name, attributes = {})
             "<#{tag_name}#{attributes_to_html(attributes)} />"
           end
-          
+
           def link_to(name, path, attributes={})
             content_tag(:a, name, attributes.merge(:href => path))
           end
-          
+
           def htmlize(markdown)
             BlueCloth.new(markdown).to_html
           end
-          
+
           # Gah, what an ugly hack.
           def inline_htmlize(markdown)
             htmlize(markdown).gsub(/^<p>/, '').gsub(/<\/p>$/, '')
           end
-          
+
           def javascript_include_tag(*names)
             names.map do |name|
               attributes = {
@@ -61,13 +61,13 @@ module PDoc
               tag(:link, attributes)
             end.join("\n")
           end
-          
+
           private
             def attributes_to_html(attributes)
               attributes.map { |k, v| v ? " #{k}=\"#{v}\"" : "" }.join
             end
         end
-        
+
         module LinkHelper
           def path_prefix
             "../" * depth
@@ -78,14 +78,14 @@ module PDoc
             path = path_prefix << [obj.section.name.downcase].concat(obj.namespace_string.downcase.split('.')).join("/")
             has_own_page?(obj) ? "#{path}/#{obj.id.downcase}.html" : "#{path}.html##{dom_id(obj)}"
           end
-          
+
           def path_to_section(obj)
             "#{path_prefix}#{obj.id.gsub(/\s/, '_')}.html"
           end
-          
+
           def section_from_name(name)
             root.sections.find { |section| section.name == name }
-          end          
+          end
 
           def auto_link(obj, short = true, attributes = {})
             if obj.is_a?(String) && obj =~ /\ssection$/
@@ -97,7 +97,7 @@ module PDoc
             name = short ? obj.name : obj.full_name
             link_to(name, path_to(obj), { :title => "#{obj.full_name} (#{obj.type})" }.merge(attributes))
           end
-          
+
           def auto_link_code(obj, short = true, attributes = {})
             return "<code>#{auto_link(obj, short, attributes)}</code>"
           end
@@ -117,17 +117,17 @@ module PDoc
               end
             end
           end
-          
+
           def dom_id(obj)
             "#{obj.id}-#{obj.type.gsub(/\s+/, '_')}"
           end
-          
+
           private
             def has_own_page?(obj)
               obj.is_a?(Documentation::Namespace) || obj.is_a?(Documentation::Utility)
             end
         end
-        
+
         module CodeHelper
           def method_synopsis(object)
             if (object.is_a?(Documentation::Property))
@@ -135,20 +135,20 @@ module PDoc
                 <pre class="syntax"><code class="ebnf">#{ object.signature }</code></pre>
                 EOS
             end
-            
+
             if (object.is_a?(Documentation::InstanceMethod) && object.methodized?)
               return <<-EOS
                 <pre class="syntax"><code class="ebnf">#{ object.signature } -&gt; #{ auto_link(object.returns, false) }
 #{ object.generic_signature } -&gt; #{ auto_link(object.returns, false) }</code></pre>
                 EOS
             end
-            
+
             <<-EOS
               <pre class="syntax"><code class="ebnf">#{ object.signature } -&gt; #{ auto_link(object.returns, false) }</code></pre>
             EOS
           end
         end
-        
+
         module MenuHelper
           def menu(obj)
             class_names = menu_class_name(obj)
@@ -174,7 +174,7 @@ module PDoc
               nil
             end
           end
-          
+
           def class_names_for(obj)
             classes = [obj.type.gsub(/\s+/, '-')]
             classes << "deprecated" if obj.deprecated?

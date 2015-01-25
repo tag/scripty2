@@ -4,14 +4,14 @@
 
   /** section: scripty2 ui
    *  class S2.UI.Autocompleter < S2.UI.Base
-   *  
+   *
   **/
   UI.Autocompleter = Class.create(UI.Base, {
     NAME: "S2.UI.Autocompleter",
 
     /**
      *  new S2.UI.Autocompleter(element, options)
-     *  
+     *
      *  Instantiates an autocompleter.
     **/
     initialize: function(element, options) {
@@ -41,7 +41,7 @@
 
       // Position the menu to appear directly below the input.
       (function() {
-        var iLayout = this.input.getLayout();      
+        var iLayout = this.input.getLayout();
         this.menu.element.setStyle({
           left: iLayout.get('left') + 'px',
           top:  (iLayout.get('top') + iLayout.get('margin-box-height')) + 'px'
@@ -62,8 +62,8 @@
       this.input.observe('blur',    this.observers.blur);
       this.input.observe('keyup',   this.observers.keyup);
       this.input.observe('keydown', this.observers.keydown);
-      
-      this.menu.observe('ui:menu:selected', 
+
+      this.menu.observe('ui:menu:selected',
        this.observers.selected);
     },
 
@@ -89,7 +89,7 @@
         }
         if (value !== this._value) {
           // Value has changed.
-          this._schedule();          
+          this._schedule();
         }
       } else {
         this.menu.close();
@@ -113,7 +113,7 @@
         case Event.KEY_DOWN:
           this.menu.moveHighlight(1);
           event.stop();
-          break;    
+          break;
         case Event.KEY_TAB:
           this.menu.selectChoice();
           break;
@@ -145,7 +145,7 @@
 
     /**
      *  S2.UI.Autocompleter#findChoices() -> undefined
-     *  
+     *
      *  Triggers an update of the choices presented to the user. If results
      *  come from the server, this is an asynchronous operation.
     **/
@@ -178,7 +178,7 @@
       // Build a case-insensitive regexp for highlighting the substring match.
       var needle = new RegExp(RegExp.escape(this._value), 'i');
       for (var i = 0, result, li, text; result = results[i]; i++) {
-        text = opt.highlightSubstring ? 
+        text = opt.highlightSubstring ?
          opt.choiceValue(result).replace(needle, "<b>$&</b>") :
          opt.choiceValue(result);
 
@@ -192,7 +192,7 @@
         this.menu.close();
       } else {
         this.menu.open();
-      }      
+      }
     },
 
     _moveMenuChoice: function(delta) {
@@ -214,7 +214,7 @@
         index = this._selectedIndex;
       }
 
-      UI.removeClassNames(choices, 'ui-state-active');      
+      UI.removeClassNames(choices, 'ui-state-active');
       if (index === -1 || index === null) return;
       choices[index].addClassName('ui-state-active');
 
@@ -255,6 +255,6 @@
 
       choiceValue: function(choice) { return choice.toString(); }
     }
-  });  
+  });
 
 })(S2.UI);

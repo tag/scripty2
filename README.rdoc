@@ -18,7 +18,7 @@ for scripty2. Patches, tests, demos, updates and documentation are always welcom
 
 = Build
 
-For building, development and testing, you need to have a working Ruby setup. 
+For building, development and testing, you need to have a working Ruby setup.
 You'll need the bluecloth, treetop and coderay gems installed.
 
 To build the distribution, run:
@@ -43,7 +43,7 @@ Though scripty2 has been used to great effect on several high-volume websites, k
 The scripty2 UI controls are under heavy development and are still in alpha. They're not included when you run the standard rake tasks. To build a distributable with UI controls included, run:
 
   rake dist:experimental
-  
+
 There are several other <tt>*:experimental</tt> tasks corresponding to common actions. Run <tt>rake -T</tt> to see the list of tasks.
 
 = Usage
@@ -79,7 +79,7 @@ To run the unit tests, use:
 You can run specific tests, or use only specific browsers:
 
   rake test BROWSERS=safari TESTS=css,heartbeat
-  
+
 = License
 
 scripty2 is is licensed under the terms of the MIT License, see the included MIT-LICENSE file.

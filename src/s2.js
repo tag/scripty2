@@ -15,17 +15,17 @@
 var S2 = {
   /**
    * S2.Version = '<%= SCRIPTY2_VERSION %>'
-   * 
+   *
    * This constant lists the version of scripty2.
   **/
   Version: '<%= SCRIPTY2_VERSION %>',
-  
+
   /**
    * S2.Extensions
    *
    * Holds information about extension modules plugged into scripty2.
   **/
-  Extensions: {} 
+  Extensions: {}
 };
 
 //= require "extensions/misc"

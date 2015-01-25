@@ -2,7 +2,7 @@
 
 /**
  *  class S2.FX.Operators.Scroll < S2.FX.Operators.Base
- *  
+ *
  *  Operator for scrolling the contents of an Element.
 **/
 S2.FX.Operators.Scroll = Class.create(S2.FX.Operators.Base, {

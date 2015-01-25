@@ -5,7 +5,7 @@
   <% if object.respond_to? :signature %>
     <%= method_synopsis(object) %>
   <% end %>
-  
+
   <% if object.is_a?(Documentation::Method) %>
     <% unless object.arguments.empty? %>
       <ul class="argument-list">
@@ -21,7 +21,7 @@
       </ul>
     <% end %>
   <% end %>
-  
+
   <%= htmlize(object.description) %>
 
   <% unless object.aliases.empty? %>
@@ -31,7 +31,7 @@
     <p class="alias alias-of">Alias of: <%= auto_link_code(object.alias_of, false) %></p>
   <% end %>
   <% if object.is_a?(Documentation::Utility) && object.related_to %>
-    <p class="related-to">Related to: 
+    <p class="related-to">Related to:
       <%= auto_link_code(object.related_to, false) %></p>
   <% end %>
   <% if object.is_a?(Documentation::Method) && object.methodized? %>

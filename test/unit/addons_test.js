@@ -1,7 +1,7 @@
 new Test.Unit.Runner({
   testFitIntoRectangle: function(){ with(this) {
     var fits = [
-      [10, 10, 100, 100], 
+      [10, 10, 100, 100],
       [100, 100, 100, 100],
       [50, 100, 200, 100],
       [50, 100, 100, 200],
@@ -10,7 +10,7 @@ new Test.Unit.Runner({
       [500, 100, 200, 100],
       [500, 100, 100, 200]
     ];
-    
+
     var solution = [
       [0, 0, 100, 100],
       [0, 0, 100, 100],
@@ -21,10 +21,10 @@ new Test.Unit.Runner({
       [0, 30, 200, 40],
       [0, 90, 100, 20]
     ];
-    
+
     fits.each( function(fit,index){
       assertEnumEqual(solution[index], S2.FX.Helpers.fitIntoRectangle(fit[0], fit[1], fit[2], fit[3]));
     });
   }}
-  
+
 });

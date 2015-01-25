@@ -6,8 +6,8 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <link type="text/css" rel="stylesheet" title="default" href="../../themes/default/theme.css" />
   <link type="text/css" rel="stylesheet disabled" title="alternate" href="../../themes/test/theme.css" />
-  
-  <style type="text/css" media="screen">  
+
+  <style type="text/css" media="screen">
     @import url("css/test.css");
   </style>
 
@@ -28,28 +28,28 @@
       <li>
         <a href="#alternate">Alternate</a>
       </li>
-    </ul>    
+    </ul>
   </div> <!-- #theme_switcher -->
-  
+
   <script type="text/javascript">
     (function() {
       var STYLESHEETS = $A(document.getElementsByTagName('link'));
-      
+
       $('theme_switcher').observe('click', function(event) {
         var element = event.element();
-        if (element.nodeName.toUpperCase() !== 'A') return;        
+        if (element.nodeName.toUpperCase() !== 'A') return;
         var sheet = element.readAttribute('href').split('#').last();
-        
+
         STYLESHEETS.each( function(s) {
           var title = s.readAttribute('title');
           s.disabled = (title !== sheet);
         });
       });
-      
+
     })();
-  </script>  
+  </script>
   <h1>Tabs Tests</h1>
-  
+
   <h2>Standard tabs</h2>
   <div id="tabs1">
 		<ul>
@@ -62,16 +62,16 @@
 		<div id="panel-2">Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</div>
 		<div id="panel-3">Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</div>
 	</div> <!-- #tabs -->
-	
+
 	<script type="text/javascript">
 	 new S2.UI.Tabs('tabs1');
 	</script>
-	
+
 	<div class="description">
 	  <p>A standard instance of <code>S2.UI.Tabs</code> with all the default options.</p>
-	 
+
 	</div> <!-- .description -->
-  
-  
+
+
 </body>
 </html>

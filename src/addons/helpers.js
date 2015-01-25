@@ -1,6 +1,6 @@
 /**
  *  S2.viewportOverlay() -> element
- *  
+ *
  *  Creates a new absolutely positioned DIV element with the dimensions of the viewport.
  *  The element is not inserted into the DOM.
  *

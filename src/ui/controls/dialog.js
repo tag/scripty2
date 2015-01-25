@@ -30,13 +30,13 @@
    *  * `buttons` (`Array` | `Boolean`): A set of `Object`s that describe the
    *    buttons that should appear at the bottom of the dialog. Set to `false`
    *    to omit buttons.
-   *  
+   *
    *  <h4>Events</h4>
-   *  
+   *
    *  All events have a `dialog` property (e.g., `event.memo.dialog`) that
    *  holds the relevant instance of `S2.UI.Dialog`. Some events have further
    *  properties, as explained below.
-   *  
+   *
    *  * `ui:dialog:before:open`: Fired when the dialog is told to open,
    *    but before it is displayed on screen. **Cancelable**. If cancelled,
    *    will suppress the display of the dialog.
@@ -59,11 +59,11 @@
     /**
      *  new S2.UI.Dialog(element, options)
      *  new S2.UI.Dialog(options)
-     *  
+     *
      *  If `element` is given, that element will become the container for
      *  the dialog. Otherwise, an element will be created to serve as the
      *  container.
-     *  
+     *
      *  Note that **the dialog is not displayed on screen when it is
      *  created**. You must explicitly call [[S2.UI.Dialog#open]] first.
     **/
@@ -78,7 +78,7 @@
       var opt = this.setOptions(options);
 
       this.element = element || new Element('div');
-      UI.addClassNames(this.element, 'ui-dialog ui-widget ' + 
+      UI.addClassNames(this.element, 'ui-dialog ui-widget ' +
        'ui-widget-content ui-corner-all');
 
       this.element.hide().setStyle({
@@ -93,14 +93,14 @@
         tabIndex: '-1',
         role: 'dialog'
       });
-      
+
       if (opt.content) {
         this.content = Object.isElement(opt.content) ? opt.content :
          new Element('div').update(opt.content);
       } else {
         this.content = new Element('div');
       }
-      
+
       // Dialog content.
       UI.addClassNames(this.content, 'ui-dialog-content ui-widget-content');
       this.element.insert(this.content);
@@ -130,13 +130,13 @@
   	  // SPAN for close button.
       // this.closeText = new Element('span');
       // UI.addClassNames(this.closeText, 'ui-icon ui-icon-closethick');
-      // 
+      //
       // this.closeButton.insert(this.closeText);
 
   	  // Text for title bar.
   	  this.titleText = new Element('span', { 'class': 'ui-dialog-title' });
   	  this.titleText.update(this.options.title).identify();
-  	  // This is the label for ARIA.	  
+  	  // This is the label for ARIA.
   	  this.element.writeAttribute('aria-labelledby',
   	   this.titleText.readAttribute('id'));
   	  this.titleBar.insert({ top: this.titleText }) ;
@@ -161,7 +161,7 @@
       };
 
     },
-    
+
     toElement: function() {
       return this.element;
     },
@@ -202,7 +202,7 @@
       // Find the middle of the viewport.
       var vSize = document.viewport.getDimensions();
       var dialog = this.element, layout = dialog.getLayout();
-      
+
       var position = {
         left: ((vSize.width  / 2) - (layout.get('width')  / 2)).round(),
         top:  ((vSize.height / 2) - (layout.get('height') / 2)).round()
@@ -221,7 +221,7 @@
 
     /**
      *  S2.UI.Dialog#open() -> this
-     *  
+     *
      *  Opens the dialog.
     **/
     open: function() {
@@ -235,7 +235,7 @@
       var opt = this.options;
 
       this.overlay = opt.modal ? new UI.Overlay() : null;
-      $(document.body).insert(this.overlay);    
+      $(document.body).insert(this.overlay);
       $(document.body).insert(this);
 
       this.element.show();
@@ -247,7 +247,7 @@
       if (this.content.match('form')) {
         forms.push(this.content);
       }
-      
+
       // Disable form submission.
       if (!opt.submitForms) {
         forms.invoke('observe', 'submit', Event.stop);
@@ -301,7 +301,7 @@
      *  S2.UI.Dialog#close(success) -> this
      *  - success (Boolean): Whether the dialog should be closed "successfully"
      *    (i.e., _OK_) or "unsuccessfully" (i.e., _Cancel_).
-     *  
+     *
      *  Closes the dialog.
     **/
     close: function(success) {
@@ -322,7 +322,7 @@
 
       // If the content area had a form, we'll get the values in object form and
       // add them to the custom event metadata.
-      var form = this.content.match('form') ? this.content : this.content.down('form');      
+      var form = this.content.match('form') ? this.content : this.content.down('form');
       if (form) {
         Object.extend(memo, { form: form.serialize({ hash: true }) });
       }
@@ -372,13 +372,13 @@
       }
     }
   });
-  
+
   Object.extend(UI.Dialog, {
     DEFAULT_OPTIONS: {
       zIndex: 1000,
 
       title: "Dialog",
-      
+
       content: null,
       modal:   true,
       focus:   'auto',
@@ -401,5 +401,5 @@
       ]
     }
   });
-  
+
 })(S2.UI);

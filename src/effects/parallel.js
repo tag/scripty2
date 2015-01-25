@@ -7,7 +7,7 @@
  *  just get down to business with a quick example!
  *
  *  <h4>Morphing 2 elements example</h4>
- *  
+ *
  *      new S2.FX.Parallel([                              // the parallel effect itself
  *         new S2.FX.Morph('element1_id', {               // morph element1_id
  *            after: function()                           // after execution function

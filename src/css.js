@@ -46,19 +46,19 @@ S2.CSS = {
     zIndex: 'integer',
     zoom: 'number'
   },
-  
+
   // An attempt to support vendor-specific properties in a sane way.
   // TODO: Do more research into what ought to be added to this list.
   VENDOR: {
     // Determined below.
     PREFIX: null,
-    
+
     // Lookups for possible supported vendor-specific properties
     LOOKUP_PREFIXES: ['webkit', 'Moz', 'O'],
-    LOOKUP_PROPERTIES: $w('BorderRadius BoxShadow Transform Transition ' + 
+    LOOKUP_PROPERTIES: $w('BorderRadius BoxShadow Transform Transition ' +
      'TransitionDuration TransitionTimingFunction TransitionProperty ' +
-     'TransitionDelay ' + 
-     'BorderTopLeftRadius BorderTopRightRadius BorderBottomLeftRadius ' + 
+     'TransitionDelay ' +
+     'BorderTopLeftRadius BorderTopRightRadius BorderBottomLeftRadius ' +
      'BorderBottomRightRadius'
     ),
     LOOKUP_EDGE_CASES: {
@@ -67,17 +67,17 @@ S2.CSS = {
       'BorderBottomLeftRadius': 'BorderRadiusBottomleft',
       'BorderBottomRightRadius': 'BorderRadiusBottomright'
     },
-    
+
     // Populated below.
     PROPERTY_MAP: {}
   },
-  
+
   /**
    *  S2.CSS.LENGTH = /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/
    *  Regular expression for a CSS length, for example 12px, 8.4in, 13% or 0.
   **/
   LENGTH: /^(([\+\-]?[0-9\.]+)(em|ex|px|in|cm|mm|pt|pc|\%))|0$/,
-  
+
   /**
    *  S2.CSS.NUMBER = /([\+-]*\d+\.?\d*)/
    *  Regular expression for a CSS numeric value, for example '+12.90', '-2' or '21.5'.
@@ -85,16 +85,16 @@ S2.CSS = {
   NUMBER: /([\+-]*\d+\.?\d*)/,
 
   __parseStyleElement: document.createElement('div'),
-  
+
   /**
    *  S2.CSS.parseStyle(string) -> Object
-   *  Takes a string of CSS rules and parses them into key/value pairs. 
+   *  Takes a string of CSS rules and parses them into key/value pairs.
    *  Shortcut properties, colors and opacity settings on IE are normalized.
-   *  
+   *
    *  Example:
-   *  
+   *
    *      S2.CSS.parseStyle('font-size:11px; border:12px solid #abc; border-left-width: 5px') ->
-   *      
+   *
    *      {
    *        borderBottomColor: '#aabbcc',
    *        borderBottomWidth: '12px',
@@ -112,39 +112,39 @@ S2.CSS = {
     var style = S2.CSS.__parseStyleElement.childNodes[0].style, styleRules = {};
 
     S2.CSS.NUMERIC_PROPERTIES.each( function(property){
-      if (style[property]) styleRules[property] = style[property]; 
+      if (style[property]) styleRules[property] = style[property];
     });
 
     S2.CSS.COLOR_PROPERTIES.each( function(property){
       if (style[property]) styleRules[property] = S2.CSS.colorFromString(style[property]);
     });
-    
+
     if (Prototype.Browser.IE && styleString.include('opacity'))
       styleRules.opacity = styleString.match(/opacity:\s*((?:0|1)?(?:\.\d*)?)/)[1];
 
     return styleRules;
   },
-  
+
   parse: function(styleString) {
     return S2.CSS.parseStyle(styleString);
   },
-  
+
   /**
    *  S2.CSS.normalize(element, style) -> Object
    *  - element (Element): The element on which the styles will be applied.
    *  - style (Object | String): The styles to be applied to the element.
-   *  
+   *
    *  "Normalizes" the given CSS by removing lines that will have no effect
    *  on the element. For instance, will remove "width: 200px" from the style
    *  if the element is _already_ `200px` wide.
-   *  
+   *
   **/
   normalize: function(element, style) {
     if (Object.isHash(style)) style = style.toObject();
     if (typeof style === 'string') style = S2.CSS.parseStyle(style);
-    
+
     var result = {}, current;
-    
+
     for (var property in style) {
       current = element.getStyle(property);
       if (style[property] !== current) {
@@ -158,7 +158,7 @@ S2.CSS = {
   /**
    *  S2.CSS.serialize(object) -> String
    *  - object (Object): An object of CSS property-value pairs.
-   *  
+   *
    *  Converts an object of CSS property-value pairs into a string
    *  suitable for setting an element's `cssText` property.
   **/
@@ -169,24 +169,24 @@ S2.CSS = {
       value = object[property];
       property = this.vendorizeProperty(property);
       output += (property + ": " + value + ';');
-    }    
+    }
     return output;
   },
-  
+
   /**
    *  S2.CSS.vendorizeProperty(property) -> String
    *  - property (String): A CSS property.
-   *  
+   *
    *  Converts a non-vendor-prefixed CSS property into its vendor-prefixed
    *  equivalent, if one exists.
-   *  
+   *
    *  #### Examples
-   *  
+   *
    *      S2.CSS.vendorizeProperty('border-radius');
    *      //-> "-moz-border-radius" (if the user is running Firefox)
    *      S2.CSS.vendorizeProperty('width'); //-> "width"
    *      S2.CSS.vendorizeProperty('narf');  //-> "narf"
-   *  
+   *
   **/
   vendorizeProperty: function(property) {
     property = property.underscore().dasherize();
@@ -197,18 +197,18 @@ S2.CSS = {
 
     return property;
   },
-  
+
   /**
    *  S2.CSS.normalizeColor(color) -> Array
    *  - color (String): Color in #abc, #aabbcc or rgba(1,2,3) format
-   *  
+   *
    *  Returns the value of a CSS color as a RGB triplet:
-   *  
+   *
    *  * \#abc       -> [170, 187, 204]
    *  * \#aabbcc    -> not changed
    *  * rgb(1,2,3)  -> [1, 2, 3]
    *  * \#xyz       -> [NaN, NaN, NaN]
-   *  
+   *
    *  This method does not support HTML color constants.
   **/
   normalizeColor: function(color) {
@@ -249,32 +249,32 @@ S2.CSS = {
    *  - from (String): Original color in #abc, #aabbcc or rgba(1,2,3) format
    *  - to (String): Target color in #abc, #aabbcc or rgba(1,2,3) format
    *  - position (Number): interpolation position between 0 (original) and 1 (target)
-   *  
-   *  Returns a color in #aabbcc format for an arbitrary position between two colors. 
+   *
+   *  Returns a color in #aabbcc format for an arbitrary position between two colors.
    *  Positions less then 0 and greater than 1 are possible.
-   *  
+   *
    *      S2.CSS.interpolateColor('#ffffff', '#000000', 0.5) -> '#808080'
-   *  
+   *
    *  This method does not support HTML color constants as input values.
   **/
   interpolateColor: function(from, to, position){
     from = S2.CSS.normalizeColor(from);
     to = S2.CSS.normalizeColor(to);
-    
-    return '#' + [0,1,2].map(function(index){ 
+
+    return '#' + [0,1,2].map(function(index){
       return Math.max(Math.min(from[index].tween(to[index], position).round(), 255), 0).toColorPart();
     }).join('');
   },
-  
+
   /**
    *  S2.CSS.interpolateNumber(from, to, position) -> Number
    *  - from (Number): Original number
    *  - to (Number): Target number
    *  - position (Number): interpolation position between 0 (original) and 1 (destination)
-   *  
-   *  Returns a number for an arbitrary position between two numbers. 
+   *
+   *  Returns a number for an arbitrary position between two numbers.
    *  Positions less then 0 and greater than 1 are possible.
-   *  
+   *
    *      S2.CSS.interpolateNumber(1, 2, 0.5)  -> 1.5
    *      S2.CSS.interpolateNumber(1.5, 4.5, 0.1) -> 1.8
    *      S2.CSS.interpolateNumber(1, 10, 2)   -> 3
@@ -289,10 +289,10 @@ S2.CSS = {
    *  - from (Number): Original CSS length
    *  - to (Number): Target CSS length (unit must be the same as in the `from` argument)
    *  - position (Number): interpolation position between 0 (original) and 1 (destination)
-   *  
-   *  Returns a CSS length for an arbitrary position between two CSS lengths. 
+   *
+   *  Returns a CSS length for an arbitrary position between two CSS lengths.
    *  Positions less then 0 and greater than 1 are possible.
-   *  
+   *
    *      S2.CSS.interpolateLength('12px','18px',0.5)-> '15px'
    *      S2.CSS.interpolateLength('10%','30%',0.7) -> '24%'
   **/
@@ -306,16 +306,16 @@ S2.CSS = {
       return (1*(parseFloat(match[1]).tween(to, position).toFixed(3))).toString();
     });
   },
-  
+
   /**
    *  S2.CSS.interpolateInteger(from, to, position) -> Number
    *  - from (Number): Original number
    *  - to (Number): Target number
    *  - position (Number): interpolation position between 0 (original) and 1 (destination)
-   *  
-   *  Returns a number rounded to the next integer for an arbitrary position between two numbers. 
+   *
+   *  Returns a number rounded to the next integer for an arbitrary position between two numbers.
    *  Positions less then 0 and greater than 1 are possible.
-   *  
+   *
    *      S2.CSS.interpolateInteger(1, 5, 0.5);  -> 3
    *      S2.CSS.interpolateInteger(2, 4, 0.1);  -> 2
    *      S2.CSS.interpolateInteger(1, 10, 2);   -> 19
@@ -324,18 +324,18 @@ S2.CSS = {
   interpolateInteger: function(from, to, position){
     return parseInt(from).tween(to, position).round();
   },
-  
+
   /**
    *  S2.CSS.interpolate(property, from, to, position) -> Number | String
    *  - property (String): CSS property name to interpolate (e.g. 'font-size')
    *  - from (String | Number): Original value
    *  - to (String | Number): Target value
    *  - position (Number): interpolation position between 0 (original) and 1 (destination)
-   *  
-   *  Returns the value for an arbitrary position between two CSS property values. 
+   *
+   *  Returns the value for an arbitrary position between two CSS property values.
    *  The type of interpolation will be automatically choosen based on the the CSS property.
    *  Positions less then 0 and greater than 1 are possible.
-   *  
+   *
    *      S2.CSS.interpolate('font-size', '14px', '18px', 0.5) -> '16px'
    *      S2.CSS.interpolate('background-color', '#abc', '#def', 0.5) -> '#c4d5e6'
    *      S2.CSS.interpolate('opacity', 1, 0, 0.75) -> 0.25
@@ -355,7 +355,7 @@ S2.CSS = {
     /**
      *  Element.getStyles(@element) -> Object
      *  - element (String | Object): DOM object or element ID
-     *  
+     *
      *  Returns an object with all currently applied style attributes for
      *  a given DOM object. This includes all styles from stylesheets,
      *  properties set with style attributes and CSS properties set with
@@ -393,7 +393,7 @@ if (!(document.defaultView && document.defaultView.getComputedStyle)) {
 Element.addMethods(S2.CSS.ElementMethods);
 
 (function() {
-  var div = document.createElement('div');  
+  var div = document.createElement('div');
   var style = div.style, prefix = null;
   var edgeCases = S2.CSS.VENDOR.LOOKUP_EDGE_CASES;
   var uncamelize = function(prop, prefix) {
@@ -402,7 +402,7 @@ Element.addMethods(S2.CSS.ElementMethods);
     }
     return prop.underscore().dasherize();
   }
-    
+
   S2.CSS.VENDOR.LOOKUP_PROPERTIES.each(function(prop) {
     if (!prefix) { // We attempt to detect a prefix
       prefix = S2.CSS.VENDOR.LOOKUP_PREFIXES.detect( function(p) {
@@ -417,8 +417,8 @@ Element.addMethods(S2.CSS.ElementMethods);
       }
     }
   });
-  
+
   S2.CSS.VENDOR.PREFIX = prefix;
-  
+
   div = null;
 })();

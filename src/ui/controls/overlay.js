@@ -1,9 +1,9 @@
 (function(UI) {
-  
+
   /** section: scripty2 ui
    *  class S2.UI.Overlay < S2.UI.Base
    *  includes S2.UI.Mixin.Shim, S2.UI.Mixin.Trackable
-   *  
+   *
    *  A class for display a modal overlay on screen.
   **/
 
@@ -12,7 +12,7 @@
    UI.Mixin.Trackable,
    UI.Mixin.Shim, {
     NAME: "S2.UI.Overlay",
-     
+
     /**
      *  new S2.UI.Overlay(options)
     **/
@@ -25,7 +25,7 @@
       this.register();
       this.createShim();
       this.adjustShim();
-      this.constructor.onResize();      
+      this.constructor.onResize();
     },
 
     destroy: function() {
@@ -48,7 +48,7 @@
     },
 
     onUnregister: function() {
-      if (this.instances.length !== 0) return;    
+      if (this.instances.length !== 0) return;
       Event.stopObserving(window, 'resize', this._resizeObserver);
       Event.stopObserving(window, 'scroll', this._resizeObserver);
     },
@@ -70,5 +70,5 @@
       }).bind(this).defer();
     }
   });
-  
+
 })(S2.UI);

@@ -33,21 +33,21 @@ def sprocketize(path, source, destination=nil)
     puts "  $ git submodule update"
     puts "\nand you should be all set.\n\n"
   end
-  
+
   puts "Sprocketizing (#{[*source].join(', ')})..."
   secretary = Sprockets::Secretary.new(
     :root         => File.join(SCRIPTY2_ROOT, path),
     :load_path    => [SCRIPTY2_SRC_DIR],
     :source_files => [*source]
   )
-  
+
   secretary.concatenation.save_to(File.join(SCRIPTY2_DIST_DIR, destination))
 end
 
 task :default => [:clean, :dist, :unified, :doc, :package, :clean_package_source]
 
 desc "Clean the distribution directory."
-task :clean do 
+task :clean do
   rm_rf SCRIPTY2_DIST_DIR
   mkdir SCRIPTY2_DIST_DIR
   mkdir SCRIPTY2_DEBUG_DIR
@@ -65,7 +65,7 @@ namespace :dist do
   task :default do
     dist_from_sources(["s2.js"])
   end
-  
+
   desc "Builds the distribution, including experimental UI controls."
   task :experimental do
     dist_from_sources(["s2.js", "experimental.js"])
@@ -82,14 +82,14 @@ def minify(src, target, compressor = 'yui')
   cp target, File.join(SCRIPTY2_DEBUG_DIR,'temp.js')
   msize = File.size(File.join(SCRIPTY2_DEBUG_DIR,'temp.js'))
   `gzip -9 #{File.join(SCRIPTY2_DEBUG_DIR,'temp.js')}`
-  
+
   osize = File.size(src)
   dsize = File.size(File.join(SCRIPTY2_DEBUG_DIR,'temp.js.gz'))
   rm_rf File.join(SCRIPTY2_DEBUG_DIR,'temp.js.gz')
-  
+
   puts "Original version: %.1fk" % (osize/1024.0)
   puts "Minified: %.1fk" % (msize/1024.0)
-  puts "Minified and gzipped: %.1fk, compression factor %.1f" % [dsize/1024.0, osize/dsize.to_f]  
+  puts "Minified and gzipped: %.1fk, compression factor %.1f" % [dsize/1024.0, osize/dsize.to_f]
 end
 
 desc "Generates a minified version of the distribution (using YUI Compressor)."
@@ -108,7 +108,7 @@ def unify_distribution
   unified = IO.read(File.join(SCRIPTY2_DIST_DIR,'prototype.js')) + IO.read(File.join(SCRIPTY2_DIST_DIR,'s2.js'))
   File.open(File.join(SCRIPTY2_RELEASE_DIR,'prototype.s2.js'), 'w') do |file|
     file.write unified
-  end 
+  end
   minify File.join(SCRIPTY2_RELEASE_DIR,'prototype.s2.js'), File.join(SCRIPTY2_DIST_DIR,'prototype.s2.min.js')
 end
 
@@ -118,7 +118,7 @@ namespace :unified do
   task :default => [:dist, :min] do
     unify_distribution
   end
-  
+
   desc "Generate a unified minified version of Prototype and scripty2, including experimental UI controls."
   task :experimental => ['dist:experimental', :min] do
     unify_distribution
@@ -126,7 +126,7 @@ namespace :unified do
 end
 
 def doc_from_sources(sources)
-  
+
   require 'tempfile'
   begin
     require "sprockets"
@@ -136,7 +136,7 @@ def doc_from_sources(sources)
     puts "  $ git submodule update"
     puts "\nand you should be all set.\n\n"
   end
-  
+
   Tempfile.open("pdoc") do |temp|
     secretary = Sprockets::Secretary.new(
       :root           => File.join(SCRIPTY2_ROOT, "src"),
@@ -144,21 +144,21 @@ def doc_from_sources(sources)
       :source_files   => sources,
       :strip_comments => false
     )
-      
+
     secretary.concatenation.save_to(temp.path)
     rm_rf SCRIPTY2_DOC_DIR
     mkdir SCRIPTY2_DOC_DIR
-    
+
     #begin
       PDoc::Runner.new(temp.path,
         :output    => SCRIPTY2_DOC_DIR,
         :templates => TEMPLATES_DIRECTORY
       ).run
-    #rescue 
+    #rescue
      # puts "\n\nEXCEPTION WHILE RUNNING PDOC, CONTINUING...\n\n"
     #end
   end
-  
+
   cp File.join(SCRIPTY2_ROOT, 'lib', 'prototype.js'), File.join(SCRIPTY2_DOC_DIR, 'javascripts')
   cp File.join(SCRIPTY2_DIST_DIR,'s2.js'), File.join(SCRIPTY2_DOC_DIR,'javascripts')
 end
@@ -168,7 +168,7 @@ namespace :doc do
   task :build => [:require] do
     doc_from_sources(["s2.js"])
   end
-  
+
   desc "Builds the documentation, including experimental UI controls."
   task :experimental => [:require] do
     doc_from_sources(["s2.js", "experimental.js"])
@@ -184,7 +184,7 @@ namespace :doc do
     end
     require lib
   end
-  
+
 end
 
 task :doc => ['doc:build']
@@ -222,17 +222,17 @@ namespace :test do
         runner.add_test(file, testcases)
       end
     end
-    
+
     UnittestJS::Browser::SUPPORTED.each do |browser|
       unless browsers_to_test && !browsers_to_test.include?(browser)
         runner.add_browser(browser.to_sym)
       end
     end
-    
+
     trap('INT') { runner.teardown; exit }
     runner.run
   end
-  
+
   task :build => [:clean, :dist] do
     builder = UnittestJS::Builder::SuiteBuilder.new({
       :input_dir  => SCRIPTY2_TEST_UNIT_DIR,
@@ -241,16 +241,16 @@ namespace :test do
     selected_tests = (ENV['TESTS'] || '').split(',')
     builder.collect(*selected_tests)
     builder.render
-    
+
     # override UnittestJS stuff
     cp File.join(SCRIPTY2_ROOT, 'lib', 'prototype.js'),
       File.join(SCRIPTY2_TMP_DIR, 'lib_assets', 'prototype.js')
   end
-  
+
   task :clean => [:require] do
     UnittestJS::Builder.empty_dir!(SCRIPTY2_TMP_DIR)
   end
-  
+
   task :require do
     lib = 'vendor/unittest_js/lib/unittest_js'
     unless File.exists?(lib)

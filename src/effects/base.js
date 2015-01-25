@@ -9,7 +9,7 @@
  *
  * <h2>Features</h2>
  *
- * * <a href="scripty2%20fx/element.html#morph-class_method">CSS morphing engine</a>: 
+ * * <a href="scripty2%20fx/element.html#morph-class_method">CSS morphing engine</a>:
  *   morph from one set of style properties to another, including
  *   support for all CSS length types (px, em, %, cm, pt, etc.)
  * * <a href="scripty2%20fx/s2/fx/transitions.html">Extensive transition system</a>
@@ -20,8 +20,8 @@
  * * Limits the number of attempted frame renders to conserve CPU in fast computers
  * * Flexible OOP-based implementation allows for easy extension and hacks
  * * <a href="scripty2%20fx/s2/fx/queue.html">Effect queuing</a> to run an effect after other effects have finished
- * * <a href="scripty2%20fx/element.html#morph-class_method">Chaining</a> and 
- *   <a href="scripty2%20fx/s2/fx/base.html#new-constructor">default options</a>: 
+ * * <a href="scripty2%20fx/element.html#morph-class_method">Chaining</a> and
+ *   <a href="scripty2%20fx/s2/fx/base.html#new-constructor">default options</a>:
  *   easy-to-use syntax for most use cases
  * * <a href="scripty2%20fx/s2/fx/element.html#play-instance_method">Reusable effect instances</a>
  *   can be used with more than one DOM element
@@ -34,40 +34,40 @@
  * This is the main effects namespace.
 **/
 S2.FX = (function(){
-  var queues = [], globalQueue, 
+  var queues = [], globalQueue,
     heartbeat, activeEffects = 0;
-  
+
   function beatOnDemand(dir) {
     activeEffects += dir;
     if (activeEffects > 0) heartbeat.start();
     else heartbeat.stop();
   }
-  
+
   function renderQueues() {
     var timestamp = heartbeat.getTimestamp();
     for (var i = 0, queue; queue = queues[i]; i++) {
       queue.render(timestamp);
     }
   }
-  
+
   function initialize(initialHeartbeat){
     if (globalQueue) return;
     queues.push(globalQueue = new S2.FX.Queue());
     S2.FX.DefaultOptions.queue = globalQueue;
     heartbeat = initialHeartbeat || new S2.FX.Heartbeat();
-    
+
     document
       .observe('effect:heartbeat', renderQueues)
       .observe('effect:queued',    beatOnDemand.curry(1))
       .observe('effect:dequeued',  beatOnDemand.curry(-1));
   }
-  
+
   function formatTimestamp(timestamp) {
     if (!timestamp) timestamp = (new Date()).valueOf();
     var d = new Date(timestamp);
     return d.getSeconds() + '.' + d.getMilliseconds() + 's';
   }
-  
+
   return {
     initialize:   initialize,
     getQueues:    function() { return queues; },
@@ -85,33 +85,33 @@ Object.extend(S2.FX, {
     fps:        60,
     duration:   .2
   },
-  
+
   elementDoesNotExistError: {
     name: 'ElementDoesNotExistError',
     message: 'The specified DOM element does not exist, but is required for this effect to operate'
   },
-  
+
   parseOptions: function(options) {
-    if (Object.isNumber(options)) 
+    if (Object.isNumber(options))
       options = { duration: options };
     else if (Object.isFunction(options))
       options = { after: options };
     else if (Object.isString(options))
       options = { duration: options == 'slow' ? 1 : options == 'fast' ? .1 : .2 };
-      
+
     return options || {};
   },
-  
+
   ready: function(element) {
     if (!element) return;
     var table = this._ready;
     var uid = element._prototypeUID;
     if (!uid) return true;
-    
+
     bool = table[uid];
     return Object.isUndefined(bool) ? true : bool;
   },
-  
+
   setReady: function(element, bool) {
     if (!element) return;
     var table = this._ready, uid = element._prototypeUID;
@@ -119,10 +119,10 @@ Object.extend(S2.FX, {
       element.getStorage();
       uid = element._prototypeUID;
     }
-    
+
     table[uid] = bool;
   },
-  
+
   _ready: {}
 });
 
@@ -139,9 +139,9 @@ S2.FX.Base = Class.create({
    *  for effects based on DOM elements, [[S2.FX.Element]].
    *
    *  <h4>Effect options</h4>
-   *  
+   *
    *  There are serveral ways the options argument can be used:
-   *      
+   *
    *      new S2.FX.Base({ duration: 3, transition: 'spring' });
    *      new S2.FX.Base(function(){})   // shortcut for { after: function(){} }
    *      new S2.FX.Base(3);             // shortcut for { duration: 3 }
@@ -164,7 +164,7 @@ S2.FX.Base = Class.create({
    *    frames per second are rendered, even if there's enough computation resources available.
    *    This can be used to make CPU-intensive effects use fewer resources.
    *  * `queue`: Specify a [[S2.FX.Queue]] to be used for the effect.
-   *  * `position`: Position within the specified queue, `parallel` (start immediately, default) or `end` 
+   *  * `position`: Position within the specified queue, `parallel` (start immediately, default) or `end`
    *    (queue up until the last effect in the queue is finished)
    *
    *  The effect won't start immediately, it will merely be initialized.
@@ -184,7 +184,7 @@ S2.FX.Base = Class.create({
     ['after','before'].each(function(method) {
       this[method] = function(method) {
         method(this);
-        return this; 
+        return this;
       }
     }, this);
   },
@@ -193,9 +193,9 @@ S2.FX.Base = Class.create({
     options = S2.FX.parseOptions(options);
 
     this.options = Object.extend(this.options || Object.extend({}, S2.FX.DefaultOptions), options);
-    
+
     if (options.tween) this.options.transition = options.tween;
-  
+
     if (this.options.beforeUpdate || this.options.afterUpdate) {
       this.update = this.updateWithoutWrappers.wrap( function(proceed,position){
         if (this.options.beforeUpdate) this.options.beforeUpdate(this, position);
@@ -233,7 +233,7 @@ S2.FX.Base = Class.create({
    *  Renders the effect, and calls the before/after functions when necessary.
    *  This method also switches the state of the effect from `idle` to `running` when
    *  the first frame is rendered, and from `running` to `finished` after the last frame
-   *  is rendered. 
+   *  is rendered.
   **/
   render: function(timestamp) {
     if (this.options.debug) {
@@ -242,7 +242,7 @@ S2.FX.Base = Class.create({
     if (timestamp >= this.startsAt) {
       // Effect should be active.
       if (this.state == 'idle' && (!this.element || S2.FX.ready(this.element))) {
-        // If there's an element, it's ready for a new effect, but this effect 
+        // If there's an element, it's ready for a new effect, but this effect
         // hasn't yet been started. Start it now.
         this.debug('starting the effect at ' + S2.FX.formatTimestamp(timestamp));
         // Reschedule the end time in case we're running behind schedule.
@@ -251,7 +251,7 @@ S2.FX.Base = Class.create({
         this.frameCount++;
         return this;
       }
-      
+
       if (timestamp >= this.endsAt && this.state !== 'finished') {
         // The effect has exceeded its scheduled time but has not yet been
         // stopped yet. Stop it now.
@@ -259,7 +259,7 @@ S2.FX.Base = Class.create({
         this.finish();
         return this;
       }
-      
+
       if (this.state === 'running') {
         // The effect is running. Figure out its new tweening coefficient
         // and update the animation.
@@ -272,20 +272,20 @@ S2.FX.Base = Class.create({
     }
     return this;
   },
-  
+
   start: function() {
     if (this.options.before) this.options.before(this);
     if (this.setup) this.setup();
     this.state = 'running';
     this.update(this.options.transition(0));
   },
-  
+
   /**
    *  S2.FX.Base#cancel([after]) -> undefined
    *  - after (Boolean): if true, run the after method (if defined), defaults to false
    *
    *  Calling `cancel()` immediately halts execution of the effect, and calls the `teardown`
-   *  method if defined. 
+   *  method if defined.
   **/
   cancel: function(after) {
     if (this.state !== 'running') return;
@@ -314,7 +314,7 @@ S2.FX.Base = Class.create({
   inspect: function() {
     return '#<S2.FX:' + [this.state, this.startsAt, this.endsAt].inspect() + '>';
   },
-  
+
   /**
    *  S2.FX.Base#update() -> undefined
    *
@@ -324,7 +324,7 @@ S2.FX.Base = Class.create({
    *  for ad-hoc effects using the beforeUpdate and afterUpdate callbacks.
   **/
   update: Prototype.emptyFunction,
-  
+
   debug: function(message) {
     if (!this.options.debug) return;
     if (window.console && console.log) {
@@ -360,14 +360,14 @@ S2.FX.Element = Class.create(S2.FX.Base, {
    *
    *  Starts an animation by using a [[S2.FX.Operator]] on the element
    *  that is associated with the effect.
-   *  
+   *
    *  The rest of the arguments are passed to Operators' constructor.
    *  This method is intended to be called in the `setup` instance method
    *  of subclasses, for example:
    *
    *      // setup method from S2.FX.Style
    *      setup: function() {
-   *        this.animate('style', this.element, { style: this.options.style }); 
+   *        this.animate('style', this.element, { style: this.options.style });
    *      }
   **/
   animate: function() {
